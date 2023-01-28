@@ -1,141 +1,138 @@
 import pygame
-import pytmx
-
-size = width, height = 512, 512
-fps = 15
-MAPS_DIR = "maps"
-size_tile = 16
-
-
-class Maze(pygame.sprite.Sprite):
-    def __init__(self, filename, free_tiles):
-        super().__init__(all_sprites)
-        self.map = pytmx.load_pygame(f"{MAPS_DIR}/{filename}")
-        self.height = self.map.height
-        self.width = self.map.width
-        self.tile_size = self.map.tilewidth
-        self.free_tiles = free_tiles
-
-    def render(self, screen):
-        ti = self.map.get_tile_image_by_gid
-        for layer in self.map.visible_layers:
-            if isinstance(layer, pytmx.TiledTileLayer):
-                for x, y, gid in layer:
-                    tile = ti(gid)
-                    if tile:
-                        screen.blit(tile, (x * self.map.tilewidth, y * self.map.tileheight))
-
-    def get_tile_id(self, position):
-        return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
-
-    def is_free(self, position):
-        return True
-
-    def find_path_step(self, start, target):
-        inf = 1000
-        x, y = start
-        distance = [[inf] * self.width for i in range(self.height)]
-        distance[y][x] = 0
-        prev = [[None] * self.width for i in range(self.height)]
-        queue = [(x, y)]
-        while queue:
-            x, y = queue.pop(0)
-            for dx, dy in (1, 0), (0, 1), (-1, 0), (0, -1):
-                next_x, next_y = x + dx, y + dx
-                if 0 <= next_x < self.width and 0 < next_y < self.height and \
-                    self.is_free((next_x, next_y)) and distance[next_y][next_x] == inf:
-                    distance[next_y][next_x] = distance[y][x] + 1
-                    prev[next_y][next_x] = (x, y)
-                    queue.append((next_x, next_y))
-        x, y = target
-        if distance[y][x] == inf or start == target:
-            return start
-        while prev[y][x] != start:
-            x, y = prev[y][x]
-        return x, y
-
-
-class Hero(pygame.sprite.Sprite):
-    def __init__(self, pic, position):
-        super().__init__(all_sprites)
-        self.x, self.y = position
-        self.image = pygame.image.load(f"data/{pic}")
-        self.image = pygame.transform.scale(self.image, (16, 16))
-
-    def get_position(self):
-        return self.x, self.y
-
-    def set_position(self, position):
-        self.x, self.y = position
-
-    def render(self, screen):
-        delta = (self.image.get_width() - size_tile) // 2
-        screen.blit(self.image, (self.x * size_tile - delta, self.y * size_tile - delta))
-
-
-class Game(pygame.sprite.Sprite):
-    def __init__(self, maze, hero):
-        super().__init__(all_sprites)
-        self.maze = maze
-        self.hero = hero
-
-    def render(self, screen):
-        self.maze.render(screen)
-        self.hero.render(screen)
-
-    def update_hero(self):
-        next_x, next_y = self.hero.get_position()
-        if pygame.key.get_pressed()[pygame.K_LEFT]:
-            next_x -= 1
-        if pygame.key.get_pressed()[pygame.K_RIGHT]:
-            next_x += 1
-        if pygame.key.get_pressed()[pygame.K_UP]:
-            next_y -= 1
-        if pygame.key.get_pressed()[pygame.K_DOWN]:
-            next_y += 1
-        if self.maze.is_free((next_x, next_y)):
-            self.hero.set_position((next_x, next_y))
-
-    def check_win(self):
-        if self.hero.get_position() == (31, 14):
-            return True
-
-
-def show_message(screen, message):
-    font = pygame.font.Font(None, 50)
-    text = font.render(message, 1, (50, 70, 0))
-    text_x = width // 2 - text.get_width() // 2
-    text_y = height // 2 - text.get_height() // 2
-    text_w = text.get_width()
-    text_h = text.get_height()
-    pygame.draw.rect(screen, (200, 150, 50), (text_x - 10, text_y - 10,
-                                              text_w + 20, text_h + 20))
-    screen.blit(text, (text_x, text_y))
-
+import os
+import sys
 
 pygame.init()
+size = width, height = 1900, 1000
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption('Лабиринт')
-all_sprites = pygame.sprite.Group()
-
-maze = Maze("maze.tmx", [129])
-hero = Hero("hero.png", (17, 31))
-game = Game(maze, hero)
-
+pygame.display.set_caption("Перемещение героя. Камера")
+STEP = 25
+fps = 60
 clock = pygame.time.Clock()
+
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('textures', name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+
+    if colorkey is not None:
+        image = image.convert()
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    if name == 'hero.png':
+        image = pygame.transform.scale(image, (24, 40))
+    else:
+        image = pygame.transform.scale(image, (200, 200))
+    return image
+
+
+tile_images = {
+    'wall': load_image('wall.jpg'),
+    'empty': load_image('pol.jpg')
+}
+player_image = load_image('hero.png')
+
+title_width = title_height = 200
+
+
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+
+def load_level(filename):
+    filename = 'maps/' + filename
+    with open(filename, 'r') as file:
+        map_level = list(map(str.strip, file.readlines()))
+    max_width = max(map(len, map_level))
+    return list(map(lambda x: x.ljust(max_width, '.'), map_level))
+
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(tiles_group, all_sprites)
+        if tile_type == 'wall':
+            self.add(box_group)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(title_width * pos_x, title_height * pos_y)
+
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(player_group, all_sprites)
+        self.image = player_image
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(title_width * pos_x + 15, title_height * pos_y + 5)
+
+
+def generate_level(level):
+    new_player, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == '#':
+                Tile('empty', x, y)
+            if level[y][x] == '*':
+                Tile('wall', x, y)
+            if level[y][x] == '.':
+                Tile('empty', x, y)
+                new_player = Player(x, y)
+    return new_player, x, y
+
+
+class Camera:
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    def update(self, target):
+        self.dx = width // 2 - (target.rect.x + target.rect.w // 2)
+        self.dy = height // 2 - (target.rect.y + target.rect.h // 2)
+        print(self.dx, self.dy)
+
+
+all_sprites = pygame.sprite.Group()
+tiles_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+box_group = pygame.sprite.Group()
+camera = Camera()
+player = None
+player, level_x, level_y = generate_level(load_level('maze.txt'))
 running = True
-game_over = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-    if not game_over:
-        game.update_hero()
+            terminate()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player.rect.x -= STEP
+                if pygame.sprite.spritecollideany(player, box_group):
+                    player.rect.x += STEP
+            if event.key == pygame.K_RIGHT:
+                player.rect.x += STEP
+                if pygame.sprite.spritecollideany(player, box_group):
+                    player.rect.x -= STEP
+            if event.key == pygame.K_UP:
+                player.rect.y -= STEP
+                if pygame.sprite.spritecollideany(player, box_group):
+                    player.rect.y += STEP
+            if event.key == pygame.K_DOWN:
+                player.rect.y += STEP
+                if pygame.sprite.spritecollideany(player, box_group):
+                    player.rect.y -= STEP
     screen.fill((0, 0, 0))
-    game.render(screen)
-    if game.check_win():
-        game_over = True
-        show_message(screen, "You win")
+    camera.update(player)
+    for sprite in all_sprites:
+        camera.apply(sprite)
+    tiles_group.draw(screen)
+    player_group.draw(screen)
     pygame.display.flip()
     clock.tick(fps)
-pygame.quit()

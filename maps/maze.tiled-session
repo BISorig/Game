@@ -4,18 +4,18 @@
     ],
     "fileStates": {
         "0x72_DungeonTilesetII_v1.4.tsx": {
-            "scaleInDock": 2,
+            "scaleInDock": 0.75,
             "scaleInEditor": 1
         },
         "maze.tmx": {
             "expandedGroupLayers": [
                 7
             ],
-            "scale": 1.7497070312499998,
-            "selectedLayer": 6,
+            "scale": 1,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 67.15409945861472,
-                "y": 164.59898420494503
+                "x": 188,
+                "y": 276.5
             }
         },
         "maze_5325.tmx": {
