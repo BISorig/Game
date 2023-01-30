@@ -51,7 +51,7 @@ class Enemy(pygame.sprite.Sprite):
         enemys_events.append(self.event_attack)
         print(2)
         pygame.time.set_timer(self.event_attack, 0)
-        pygame.time.set_timer(self.event_calmness, 100)
+        pygame.time.set_timer(self.event_calmness, 80)
         self.hp = params['hp']
         self.damage = params['damage']
         self.params = params
@@ -79,7 +79,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.mode in ['Idle', 'Run'] and self.pr_mode not in ['Idle', 'Run']:
             self.pr_mode = self.mode
             pygame.time.set_timer(self.event_attack, 0)
-            pygame.time.set_timer(self.event_calmness, 100)
+            pygame.time.set_timer(self.event_calmness, 50)
         elif self.mode == 'Attack' and self.pr_mode != 'Attack':
             self.pr_mode = 'Attack'
             pygame.time.set_timer(self.event_calmness, 0)
@@ -123,8 +123,6 @@ class Enemy(pygame.sprite.Sprite):
                     player.rect.x -= player.step
             if player.mode != 'Roll' and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2]:
                 player.hp -= 0.5
-            if self.num_images == 1 and self.route == 'right' and self.mode == 'Attack' and not self.fl:
-                self.rect.x -= self.step * 40
-                self.fl = 1
+
 
 

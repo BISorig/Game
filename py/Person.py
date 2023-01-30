@@ -176,6 +176,8 @@ class Person(pygame.sprite.Sprite):
                     self.rect.x -= self.step
             if not self.attack_queue:
                 self.mode = 'Idle'
+                pygame.time.set_timer(self.event_attack, 0)
+                pygame.time.set_timer(self.event_calmness, 150)
                 self.num_images = 0
 
 

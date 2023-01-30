@@ -19,7 +19,7 @@ WASD = [pygame.K_w, pygame.K_d, pygame.K_a, 1073742049]
 step = 50
 player = Person(250, 165, step=step)
 enemys = []
-for i in range(2):
+for i in range(1, 2):
     par = {res[0][1]: res2[i][0], res[1][1]: res2[i][1], res[2][1]: res2[i][2], res[3][1]: res2[i][3], res[4][1]: res2[i][4], res[5][1]: res2[i][5], res[6][1]: res2[i][6]}
     print(par)
     enemys.append((Enemy(par, 160, 180), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))

@@ -22,7 +22,7 @@ class Map(pygame.sprite.Sprite):
                     if image:
                         image = pygame.transform.scale(image, (48, 48))
                     gid = self.map.get_tile_gid(x, y, i)
-                    print(gid, end=' ')
+                    #print(gid, end=' ')
                     if image:
                         if i == 1:
                             Tile(image, x, y, 'h_let')
