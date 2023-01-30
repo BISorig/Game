@@ -1,7 +1,7 @@
 import pytmx
-from Tile import Tile
-from Person import all_sprites
-from load_image import load_image
+from py.Tile import Tile
+from py.Person import all_sprites
+from py.load_image import load_image
 import pygame
 
 
@@ -9,8 +9,8 @@ class Map(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__(all_sprites)
         self.image = pygame.Surface((1920, 1110))
-        self.map = pytmx.load_pygame('map\\level1\\tiled\\Level_0.tmx')
-        sky = pygame.transform.scale(pygame.image.load("map\\Magic-Cliffs-Gamekit\\Environment\\PNG\\sky.png"), (1920, 1110))
+        self.map = pytmx.load_pygame('data\\map\\level1\\tiled\\Level_0.tmx')
+        sky = pygame.transform.scale(pygame.image.load("data\\map\\Magic-Cliffs-Gamekit\\Environment\\PNG\\sky.png"), (1920, 1110))
         self.image.blit(sky, (0, 0))
         self.height = self.map.height
         self.width = self.map.width

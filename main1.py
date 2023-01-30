@@ -1,9 +1,15 @@
 import pygame
-from Person import *
-from Enemy import *
-from Camera import *
-import csv
-from Map import *
+from py.Person import *
+from py.Enemy import *
+from py.Camera import *
+import sqlite3
+from py.Map import *
+
+con = sqlite3.connect("data\\bd\\mobs.db")
+cur = con.cursor()
+res = cur.execute("""PRAGMA table_info(Enemys)""").fetchall()
+res2 = cur.execute("""SELECT * FROM Enemys""").fetchall()
+print(res, res2, sep='\n')
 
 pygame.init()
 pygame.mouse.set_visible(False)
@@ -14,16 +20,18 @@ step = 50
 player = Person(250, 165, step=step)
 enemys = []
 for i in range(2):
-    enemys.append((Enemy(160, 180, 10), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))
+    par = {res[0][1]: res2[i][0], res[1][1]: res2[i][1], res[2][1]: res2[i][2], res[3][1]: res2[i][3], res[4][1]: res2[i][4], res[5][1]: res2[i][5], res[6][1]: res2[i][6]}
+    print(par)
+    enemys.append((Enemy(par, 160, 180), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))
 print(enemys)
 map = Map()
 cmr = Camera(w, h)
-run = True
-keydown = []
+run = 1
+motion_keydown = []
+attack_keydown = []
 mouse_down = 0
 PLAYER_EVENT = pygame.USEREVENT + 1
 PLAYER_ATTACK_EVENT = pygame.USEREVENT + 2
-pygame.time.set_timer(PLAYER_ATTACK_EVENT, 150)
 clock = pygame.time.Clock()
 while run:
     mouse_down = 0
@@ -33,15 +41,15 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key in WASD:
                 num_images = 1
-                keydown.append(event.key)
+                motion_keydown.append(event.key)
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_down = event.button
-        if event.type == pygame.MOUSEBUTTONUP:
-            player.fl_block = 0
-            player.mode = 'Idle'
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 3:
+            mouse_down = -3
+
         if event.type == pygame.KEYUP:
-            if event.key in WASD and event.key in keydown:
-                keydown.remove(event.key)
+            if event.key in WASD and event.key in motion_keydown:
+                motion_keydown.remove(event.key)
         if event.type in [PLAYER_EVENT, PLAYER_ATTACK_EVENT]:
             #print(-2)
             player.num_images += 1
@@ -51,7 +59,7 @@ while run:
                 if event.type in enemy:
                     enemy[0].num_images += 1
 
-    player.update(keydown, mouse_down, screen)
+    player.update(motion_keydown, mouse_down, screen)
     enemys_group.update(player)
     screen.fill('black')
     all_sprites.draw(screen)
