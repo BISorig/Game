@@ -54,11 +54,11 @@ class Person(pygame.sprite.Sprite):
         self.rect = self.rect.move(300, 300)
         self.route = 'right'
         self.num_images = 0
-        self.step = 10
+        self.step = 3
         self.mode = "Idle"
         self.jump_m = -1
         self.jump = 500
-        self.jump_h = 10
+        self.jump_h = 5
         self.pr_mode = "Idle"
         self.attack_queue = 0
         self.hp = 100

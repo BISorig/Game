@@ -16,13 +16,18 @@ class Enemy(pygame.sprite.Sprite):
                                  'Run': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Run\\Run{i}.png", 'white')
                                          for i in range(params['run'])],
                                  'Attack': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Attack\\Attack{i}.png", 'white')
-                                            for i in range(params['attack'])]},
+                                            for i in range(params['attack(pict_num)'])],
+                                 'Hit': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Hit\\Hit{i}.png", 'white')
+                                            for i in range(params['hit(pict_num)'])],
+                                 },
                        "left": {'Idle': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Idle\\Idle{i}.png", 'white'), True, False)
                                          for i in range(params['idle'])],
                                 'Run': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Run\\Run{i}.png", 'white'), True, False)
                                         for i in range(params['run'])],
                                 'Attack': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Attack\\Attack{i}.png", 'white'), True, False)
-                                           for i in range(params['attack'])]
+                                           for i in range(params['attack(pict_num)'])],
+                                'Hit': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Hit\\Hit{i}.png", 'white'), True, False)
+                                           for i in range(params['hit(pict_num)'])]
                                 }
                        }
         for route in self.images.keys():
@@ -32,11 +37,13 @@ class Enemy(pygame.sprite.Sprite):
                                                                                                                self.images[route][mode][image].get_height() * 4))
         self.masks = {"right": {"Idle": [pygame.mask.from_surface(self.images["right"]["Idle"][i]) for i in range(params['idle'])],
                                 "Run": [pygame.mask.from_surface(self.images["right"]["Run"][i]) for i in range(params['run'])],
-                                "Attack": [pygame.mask.from_surface(self.images["right"]["Attack"][i]) for i in range(params['attack'])]},
+                                "Attack": [pygame.mask.from_surface(self.images["right"]["Attack"][i]) for i in range(params['attack(pict_num)'])],
+                                "Hit": [pygame.mask.from_surface(self.images["right"]["Hit"][i]) for i in range(params['hit(pict_num)'])]},
 
                       "left": {"Idle": [pygame.mask.from_surface(self.images["left"]["Idle"][i]) for i in range(params['idle'])],
                                "Run": [pygame.mask.from_surface(self.images["left"]["Run"][i]) for i in range(params['run'])],
-                               "Attack": [pygame.mask.from_surface(self.images["left"]["Attack"][i]) for i in range(params['attack'])]}}
+                               "Attack": [pygame.mask.from_surface(self.images["left"]["Attack"][i]) for i in range(params['attack(pict_num)'])],
+                               'Hit': [pygame.mask.from_surface(self.images["left"]["Hit"][i]) for i in range(params['hit(pict_num)'])]}}
         self.image = self.images['right']['Idle'][0]
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(random.randint(1000, 1600), 500)
@@ -45,54 +52,61 @@ class Enemy(pygame.sprite.Sprite):
         self.step = params['step']
         self.mode = "Idle"
         self.pr_mode = 'Idle'
-        self.event_calmness = pygame.NUMEVENTS - 1 - len(enemys_events)
-        enemys_events.append(self.event_calmness)
-        self.event_attack = pygame.NUMEVENTS - 1 - len(enemys_events)
-        enemys_events.append(self.event_attack)
-        print(2)
-        pygame.time.set_timer(self.event_attack, 0)
-        pygame.time.set_timer(self.event_calmness, 80)
+        self.event_idle = pygame.NUMEVENTS - 1 - len(enemys_events)
+        enemys_events.append(self.event_idle)
+        pygame.time.set_timer(self.event_idle, params['idle_event_time'])
         self.hp = params['hp']
         self.damage = params['damage']
         self.params = params
+        self.events = [self.event_idle]
 
     def update(self, player):
-        if pygame.sprite.collide_mask(self, player) and player.mode == 'Attack':
-            self.hp -= 10
-        if self.hp <= 0:
-            self.kill()
-        if self.mode != 'Attack':
-            self.turn(player)
-        if (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 > 1000000 and self.mode not in ['Idle', 'Attack']:
+
+
+
+        if (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 > 1000000 and self.mode not in ['Idle', 'Attack', 'Hit']:
             self.pr_mode = self.mode
             self.mode = 'Idle'
             self.num_images = 0
-        elif 100000 < (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 <= 1000000 and self.mode not in ['Run', 'Attack']:
+        elif 100000 < (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 <= 1000000 and self.mode not in ['Run', 'Attack', 'Hit']:
             self.pr_mode = self.mode
             self.mode = 'Run'
             self.num_images = 0
-        if (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 <= 100000 and self.mode != 'Attack':
+        if (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 <= 100000 and self.mode not in ['Attack', 'Hit']:
             self.pr_mode = self.mode
             self.mode = 'Attack'
             self.fl = 0
             self.num_images = 0
-        if self.mode in ['Idle', 'Run'] and self.pr_mode not in ['Idle', 'Run']:
+        #print(self.mode, self.pr_mode)
+        if self.mode == 'Idle' and self.pr_mode != 'Idle':
             self.pr_mode = self.mode
-            pygame.time.set_timer(self.event_attack, 0)
-            pygame.time.set_timer(self.event_calmness, 50)
+            pygame.time.set_timer(self.event_idle, self.params['idle_event_time'])
+        elif self.mode == 'Hit' and self.pr_mode != 'Hit':
+            self.pr_mode = self.mode
+            pygame.time.set_timer(self.event_idle, 200)
+        elif self.mode == 'Run' and self.pr_mode != 'Run':
+            self.pr_mode = self.mode
+            pygame.time.set_timer(self.event_idle, self.params['run_event_time'])
         elif self.mode == 'Attack' and self.pr_mode != 'Attack':
             self.pr_mode = 'Attack'
-            pygame.time.set_timer(self.event_calmness, 0)
-            pygame.time.set_timer(self.event_attack, 300)
-            #pygame.time.set_timer(self.event_attack, 300)
+            pygame.time.set_timer(self.event_idle, self.params['attack_event_time'])
+
+
+        self.death()
+        self.hit(player)
+        self.turn(player)
+
         self.motion(player)
         self.attack(player)
+
+        #print(self.num_images)
         self.image = self.images[self.route][self.mode][self.num_images]
 
     def turn(self, player):
-        self.route = 'right'
-        if (player.rect.x - (self.rect.x - self.step)) ** 2 < (player.rect.x - (self.rect.x + self.step)) ** 2:
-            self.route = 'left'
+        if self.mode not in ['Hit', 'Attack']:
+            self.route = 'right'
+            if (player.rect.x - (self.rect.x - 10)) ** 2 < (player.rect.x - (self.rect.x + 10)) ** 2:
+                self.route = 'left'
 
     def motion(self, player):
         if self.mode == 'Idle':
@@ -107,22 +121,45 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.y += self.step
 
     def attack(self, player):
-        if self.num_images == self.params['attack'] and self.mode == 'Attack':
+        if self.num_images == self.params['attack(pict_num)'] and self.mode == 'Attack':
             self.mode = 'Idle'
             self.fl = 0
         if self.mode == 'Attack':
-            self.num_images %= self.params['attack']
-            if self.num_images == 3:
+            self.num_images %= self.params['attack(pict_num)']
+            if self.num_images == self.params['attack_motion(pict_num)']:
                 if self.route == 'right' and not (pygame.sprite.collide_mask(self, player) and player.mode == 'BlockIdle'):
-                    self.rect.x += self.step * 10
+                    self.rect.x += self.params['attack_motion']
                 elif not (pygame.sprite.collide_mask(self, player) and player.mode == 'BlockIdle'):
-                    self.rect.x -= self.step * 10
+                    self.rect.x -= self.params['attack_motion']
                 elif self.route == 'right':
                     player.rect.x += player.step
                 else:
                     player.rect.x -= player.step
+            # if self.num_images == 0:
+            #     self.a = self.rect.x
+            # if self.num_images == self.params['attack(pict_num)'] - 1:
+            #     #print(self.rect.x - self.a)
             if player.mode != 'Roll' and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2]:
-                player.hp -= 0.5
+                player.hp -= self.damage
 
+    def death(self):
+        if self.hp <= 0:
+            self.kill()
+
+    def hit(self, player):
+        if pygame.sprite.collide_mask(self, player) and player.mode == 'Attack' and self.mode != 'Hit' and (self.mode != 'Attack' or self.num_images in [0, 1, 2]):
+            self.pr_mode = self.mode
+            self.mode = 'Hit'
+            self.num_images = 0
+        elif self.mode == 'Hit' and self.num_images == self.params['hit(pict_num)']:
+            self.pr_mode = 'Hit'
+            self.mode = 'Idle'
+            self.num_images = 0
+        if self.mode == 'Hit' and self.num_images == 0:
+            self.hp -= 0.1
+            if self.route == 'right':
+                self.rect.x -= 3
+            else:
+                self.rect.x += 3
 
 

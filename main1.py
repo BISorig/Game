@@ -16,11 +16,13 @@ pygame.mouse.set_visible(False)
 size = w, h = 1900, 1000
 screen = pygame.display.set_mode(size)
 WASD = [pygame.K_w, pygame.K_d, pygame.K_a, 1073742049]
-step = 50
+step = 1
 player = Person(250, 165, step=step)
 enemys = []
-for i in range(1, 2):
-    par = {res[0][1]: res2[i][0], res[1][1]: res2[i][1], res[2][1]: res2[i][2], res[3][1]: res2[i][3], res[4][1]: res2[i][4], res[5][1]: res2[i][5], res[6][1]: res2[i][6]}
+for i in range(1):
+    par = {}
+    for j in range(13):
+        par[res[j][1]] = res2[i][j]
     print(par)
     enemys.append((Enemy(par, 160, 180), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))
 print(enemys)
@@ -56,8 +58,9 @@ while run:
         if event.type in enemys_events:
             #print(event.type)
             for enemy in enemys:
-                if event.type in enemy:
+                if event.type in enemy[0].events:
                     enemy[0].num_images += 1
+
 
     player.update(motion_keydown, mouse_down, screen)
     enemys_group.update(player)
@@ -72,5 +75,4 @@ while run:
     screen.blit(player.text, (100, 100))
     enemys_group.draw(screen)
     pygame.display.flip()
-    clock.tick(60)
 pygame.quit()

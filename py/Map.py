@@ -30,7 +30,7 @@ class Map(pygame.sprite.Sprite):
                             self.image.blit(image, (x * self.tile_size, y * self.tile_size))
 
 
-                print()
+                #print()
 
 
         self.rect = self.image.get_rect()
