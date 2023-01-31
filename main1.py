@@ -5,11 +5,8 @@ from py.Camera import *
 import sqlite3
 from py.Map import *
 
-con = sqlite3.connect("data\\bd\\mobs.db")
-cur = con.cursor()
-res = cur.execute("""PRAGMA table_info(Enemys)""").fetchall()
-res2 = cur.execute("""SELECT * FROM Enemys""").fetchall()
-print(res, res2, sep='\n')
+
+
 
 pygame.init()
 pygame.mouse.set_visible(False)
@@ -18,13 +15,13 @@ screen = pygame.display.set_mode(size)
 WASD = [pygame.K_w, pygame.K_d, pygame.K_a, 1073742049]
 step = 1
 player = Person(250, 165, step=step)
-enemys = []
-for i in range(1):
-    par = {}
-    for j in range(13):
-        par[res[j][1]] = res2[i][j]
-    print(par)
-    enemys.append((Enemy(par, 160, 180), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))
+
+# for i in range(1):
+#     par = {}
+#     for j in range(14):
+#         par[res[j][1]] = res2[i][j]
+#     print(par)
+#     enemys.append((Enemy(par, 160, 180), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))
 print(enemys)
 map = Map()
 cmr = Camera(w, h)
