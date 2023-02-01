@@ -13,7 +13,7 @@ for i in range(len(res_person)):
     par_person[res_person[i][1]] = res2_person[0][i]
 
 class Person(pygame.sprite.Sprite):
-    def __init__(self, x, y, step=0):
+    def __init__(self, x, y):
         super().__init__(player_group, all_sprites)
         size_person = (x, y)
         self.images = {"right": {'Idle': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"), size_person)
@@ -155,11 +155,9 @@ class Person(pygame.sprite.Sprite):
                     if self.mode not in ['Attack', 'Roll', 'BlockIdle']:
                         self.rect.x += self.step * k
                         self.num_images %= 10
-                    print(v_let_sprites.sprites()[0].rect.x, self.rect.x)
-                    for i in v_let_sprites.sprites():
-                        if pygame.sprite.collide_mask(self, i) and self.route == 'left':
-                            self.rect.x -= self.step * k
-                            break
+                        if pygame.sprite.spritecollideany(self, v_let_sprites):
+                            self.rect.x -= self.step * л
+
             if key == 1073742049 and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
                 keydown.remove(1073742049)
                 self.mode = 'Roll'
@@ -200,7 +198,6 @@ class Person(pygame.sprite.Sprite):
                 self.num_attack = 3
             if self.num_images == 20 and self.num_attack == 3 and self.attack_queue:
                 self.attack_queue = 0
-                print(self.attack_queue)
             if self.num_images in [2, 3, 8, 9, 16, 17]:
                 if self.route == 'right':
                     self.rect.x += self.step

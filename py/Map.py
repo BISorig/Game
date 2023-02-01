@@ -1,7 +1,6 @@
 import pytmx
 from py.Tile import Tile
 from py.Person import all_sprites
-from py.load_image import load_image
 from py.Enemy import *
 import pygame
 import  sqlite3
