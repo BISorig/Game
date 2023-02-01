@@ -1,8 +1,16 @@
 import pygame.sprite
+import sqlite3
 from py.load_image import *
-from py.Tile import all_sprites, let_sprites, h_let_sprites
+from py.Tile import all_sprites, let_sprites, h_let_sprites, v_let_sprites
 player_group = pygame.sprite.Group()
 
+con = sqlite3.connect("data\\bd\\parameters.db")
+cur = con.cursor()
+res_person = cur.execute("""PRAGMA table_info(Person)""").fetchall()
+res2_person = cur.execute("""SELECT * FROM Person""").fetchall()
+par_person = {}
+for i in range(len(res_person)):
+    par_person[res_person[i][1]] = res2_person[0][i]
 
 class Person(pygame.sprite.Sprite):
     def __init__(self, x, y, step=0):
@@ -67,18 +75,19 @@ class Person(pygame.sprite.Sprite):
         self.rect = self.rect.move(300, 300)
         self.route = 'right'
         self.num_images = 0
-        self.step = 3
+        self.step = par_person['step']
         self.mode = "Idle"
         self.jump_m = -1
         self.jump = 500
         self.jump_h = 5
         self.pr_mode = "Idle"
         self.attack_queue = 0
-        self.hp = 100
+        self.hp = 9999999999999999999
         self.event = pygame.USEREVENT + 1
         pygame.time.set_timer(self.event, 100)
         self.fl_block = 0
         self.num_attack = 0
+        self.damage = par_person['damage']
 
     def update(self, motion_keydown, mouse_down, screen):
         font = pygame.font.Font(None, 36)
@@ -86,6 +95,7 @@ class Person(pygame.sprite.Sprite):
         self.death()
         if self.mode != 'Death':
             if self.mode == 'Hit' and self.num_images == 3:
+                pygame.time.set_timer(self.event, 150)
                 self.mode = 'Idle'
                 self.num_images = 0
             self.motion(motion_keydown)
@@ -95,7 +105,6 @@ class Person(pygame.sprite.Sprite):
             pygame.time.set_timer(self.event, 0)
         self.image = self.images[self.route][self.mode][self.num_images]
 
-
     def motion(self, keydown):
         if self.mode == 'Roll':
             if self.num_images == 9:
@@ -104,8 +113,12 @@ class Person(pygame.sprite.Sprite):
                 self.mode = 'Idle'
             elif self.route == 'right':
                 self.rect.x += self.step
+                if pygame.sprite.spritecollideany(self, v_let_sprites):
+                    self.rect.x -= self.step
             else:
                 self.rect.x -= self.step
+                if pygame.sprite.spritecollideany(self, v_let_sprites):
+                    self.rect.x += self.step
         if not keydown and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
             self.mode = "Idle"
             self.num_images %= 8
@@ -142,7 +155,8 @@ class Person(pygame.sprite.Sprite):
                     if self.mode not in ['Attack', 'Roll', 'BlockIdle']:
                         self.rect.x += self.step * k
                         self.num_images %= 10
-                    if pygame.sprite.spritecollideany(self, let_sprites):
+                    print(v_let_sprites.sprites()[0].rect.x, self.rect.x)
+                    if pygame.sprite.spritecollideany(self, v_let_sprites):
                         self.rect.x -= self.step * k
             if key == 1073742049 and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
                 keydown.remove(1073742049)
@@ -196,6 +210,7 @@ class Person(pygame.sprite.Sprite):
                 self.num_images = 0
 
     def hit(self, enemy):
+        pygame.time.set_timer(self.event, 75)
         self.mode = 'Hit'
         self.num_images = 0
         self.route = 'right'

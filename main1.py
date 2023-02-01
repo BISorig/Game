@@ -32,6 +32,7 @@ mouse_down = 0
 PLAYER_EVENT = pygame.USEREVENT + 1
 PLAYER_ATTACK_EVENT = pygame.USEREVENT + 2
 clock = pygame.time.Clock()
+cmr_fl = 1
 while run:
     mouse_down = 0
     for event in pygame.event.get():
@@ -63,11 +64,16 @@ while run:
     enemys_group.update(player)
     screen.fill('black')
     all_sprites.draw(screen)
-    # cmr.update(player)
-    # cmr.apply(player)
-    # for i in map_sprite.sprites():
-    #     cmr.apply(i)
-    #     print(i.rect.x, i.rect.y)
+    if (v_let_sprites.sprites()[0].rect.x < 0 or player.route == 'right' and player.rect.x == 828) and (v_let_sprites.sprites()[1].rect.x > 1920 or player.route == 'left' and player.route == 'left'):
+        cmr.update(player)
+        cmr.apply(player)
+        cmr.apply(map)
+        for i in v_let_sprites.sprites():
+            cmr.apply(i)
+        for i in h_let_sprites.sprites():
+            cmr.apply(i)
+        for i in enemys_group.sprites():
+            cmr.apply(i)
     player_group.draw(screen)
     screen.blit(player.text, (100, 100))
     enemys_group.draw(screen)

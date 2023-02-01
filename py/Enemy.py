@@ -11,9 +11,9 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, params, x, y):
         super().__init__(enemys_group)
         self.images = {"right": {'Idle': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Idle\\Idle{i}.png", 'white')
-                                          for i in range(params['idle'])],
+                                          for i in range(params['idle_pict_num'])],
                                  'Run': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Run\\Run{i}.png", 'white')
-                                         for i in range(params['run'])],
+                                         for i in range(params['run_pict_num'])],
                                  'Attack': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Attack\\Attack{i}.png", 'white')
                                             for i in range(params['attack_pict_num'])],
                                  'Hit': [load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Hit\\Hit{i}.png", 'white')
@@ -22,9 +22,9 @@ class Enemy(pygame.sprite.Sprite):
                                             for i in range(params['death_pict_num'])]
                                  },
                        "left": {'Idle': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Idle\\Idle{i}.png", 'white'), True, False)
-                                         for i in range(params['idle'])],
+                                         for i in range(params['idle_pict_num'])],
                                 'Run': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Run\\Run{i}.png", 'white'), True, False)
-                                        for i in range(params['run'])],
+                                        for i in range(params['run_pict_num'])],
                                 'Attack': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Attack\\Attack{i}.png", 'white'), True, False)
                                            for i in range(params['attack_pict_num'])],
                                 'Hit': [pygame.transform.flip(load_image(f"data\\Enemy\\{params['Name']}\\Sprites\\Hit\\Hit{i}.png", 'white'), True, False)
@@ -36,15 +36,15 @@ class Enemy(pygame.sprite.Sprite):
         for route in self.images.keys():
             for mode in self.images[route].keys():
                 for image in range(len(self.images[route][mode])):
-                    self.images[route][mode][image] = pygame.transform.scale(self.images[route][mode][image], (self.images[route][mode][image].get_width() * 4,
-                                                                                                               self.images[route][mode][image].get_height() * 4))
-        self.masks = {"right": {"Idle": [pygame.mask.from_surface(self.images["right"]["Idle"][i]) for i in range(params['idle'])],
-                                "Run": [pygame.mask.from_surface(self.images["right"]["Run"][i]) for i in range(params['run'])],
+                    self.images[route][mode][image] = pygame.transform.scale(self.images[route][mode][image], (self.images[route][mode][image].get_width() * params['x_size'],
+                                                                                                               self.images[route][mode][image].get_height() * params['x_size']))
+        self.masks = {"right": {"Idle": [pygame.mask.from_surface(self.images["right"]["Idle"][i]) for i in range(params['idle_pict_num'])],
+                                "Run": [pygame.mask.from_surface(self.images["right"]["Run"][i]) for i in range(params['run_pict_num'])],
                                 "Attack": [pygame.mask.from_surface(self.images["right"]["Attack"][i]) for i in range(params['attack_pict_num'])],
                                 "Hit": [pygame.mask.from_surface(self.images["right"]["Hit"][i]) for i in range(params['hit_pict_num'])]},
 
-                      "left": {"Idle": [pygame.mask.from_surface(self.images["left"]["Idle"][i]) for i in range(params['idle'])],
-                               "Run": [pygame.mask.from_surface(self.images["left"]["Run"][i]) for i in range(params['run'])],
+                      "left": {"Idle": [pygame.mask.from_surface(self.images["left"]["Idle"][i]) for i in range(params['idle_pict_num'])],
+                               "Run": [pygame.mask.from_surface(self.images["left"]["Run"][i]) for i in range(params['run_pict_num'])],
                                "Attack": [pygame.mask.from_surface(self.images["left"]["Attack"][i]) for i in range(params['attack_pict_num'])],
                                'Hit': [pygame.mask.from_surface(self.images["left"]["Hit"][i]) for i in range(params['hit_pict_num'])]}}
         self.image = self.images['right']['Idle'][0]
@@ -65,23 +65,24 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self, player):
         self.death()
-        if player.mode == 'Death':
+        if player.mode == 'Death' and self.mode != 'Death':
             self.mode = 'Idle'
-            self.num_images %= self.params['idle']
+            self.num_images %= self.params['idle_pict_num']
         elif self.mode != 'Death':
-            if (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 > 1000000 and self.mode not in ['Idle', 'Attack', 'Hit']:
+            if abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2)) > 1000 and self.mode not in ['Idle', 'Attack', 'Hit']:
                 self.pr_mode = self.mode
                 self.mode = 'Idle'
                 self.num_images = 0
-            elif 100000 < (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 <= 1000000 and self.mode not in ['Run', 'Attack', 'Hit']:
+            elif self.params['radius'] < abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2)) <= 1000 and self.mode not in ['Run', 'Attack', 'Hit']:
                 self.pr_mode = self.mode
                 self.mode = 'Run'
                 self.num_images = 0
-            if (player.rect.x - self.rect.x) ** 2 + (player.rect.y - self.rect.y) ** 2 <= 100000 and self.mode not in ['Attack', 'Hit']:
+            elif abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2)) <= self.params['radius'] and self.mode not in ['Attack', 'Hit']:
                 self.pr_mode = self.mode
                 self.mode = 'Attack'
                 self.fl = 0
                 self.num_images = 0
+
             #print(self.mode, self.pr_mode)
             if self.mode == 'Idle' and self.pr_mode != 'Idle':
                 self.pr_mode = self.mode
@@ -105,20 +106,19 @@ class Enemy(pygame.sprite.Sprite):
             self.attack(player)
         elif self.mode == 'Death' and self.num_images == self.params['death_pict_num'] - 1:
             pygame.time.set_timer(self.event, 0)
-            #print(self.num_images)
         self.image = self.images[self.route][self.mode][self.num_images]
 
     def turn(self, player):
-        if self.mode not in ['Hit', 'Attack']:
+        if self.mode != 'Hit' and (self.mode != 'Attack' or self.num_images == 0):
             self.route = 'right'
-            if (player.rect.x - (self.rect.x - 10)) ** 2 < (player.rect.x - (self.rect.x + 10)) ** 2:
+            if abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2 - 1)) < abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2 + 1)):
                 self.route = 'left'
 
     def motion(self, player):
         if self.mode == 'Idle':
-            self.num_images %= self.params['idle']
+            self.num_images %= self.params['idle_pict_num']
         if self.mode == 'Run':
-            self.num_images %= self.params['run']
+            self.num_images %= self.params['run_pict_num']
             turn = 1
             if self.route == 'left':
                 turn = -1
@@ -129,6 +129,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self, player):
         if self.num_images == self.params['attack_pict_num'] and self.mode == 'Attack':
             self.mode = 'Idle'
+            self.num_images = 0
             self.fl = 0
         if self.mode == 'Attack':
             self.num_images %= self.params['attack_pict_num']
@@ -146,7 +147,7 @@ class Enemy(pygame.sprite.Sprite):
             #     self.a = self.rect.x
             # if self.num_images == self.params['attack_pict_num'] - 1:
             #     #print(self.rect.x - self.a)
-            if player.mode != 'Roll' and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2]:
+            if player.mode not in ['BlockIdle', 'Roll'] and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2]:
                 player.hp -= self.damage
                 if player.mode not in ['BlockIdle', 'Death']:
                     player.hit(self)
@@ -156,8 +157,6 @@ class Enemy(pygame.sprite.Sprite):
             self.mode = 'Death'
             self.num_images = 0
             pygame.time.set_timer(self.event, 300)
-
-
 
     def hit(self, player):
         if pygame.sprite.collide_mask(self, player) and player.mode == 'Attack' and self.mode != 'Hit' and (self.mode != 'Attack' or self.num_images in [0, 1, 2]):
@@ -169,7 +168,7 @@ class Enemy(pygame.sprite.Sprite):
             self.mode = 'Idle'
             self.num_images = 0
         if self.mode == 'Hit' and self.num_images == 0:
-            self.hp -= 1
+            self.hp -= player.damage
             if player.route == 'right':
                 self.rect.x += 3
                 self.route = 'left'
