@@ -64,7 +64,7 @@ while run:
     enemys_group.update(player)
     screen.fill('black')
     all_sprites.draw(screen)
-    if (v_let_sprites.sprites()[0].rect.x < 0 or player.route == 'right' and player.rect.x == 828) and (v_let_sprites.sprites()[1].rect.x > 1920 or player.route == 'left' and player.route == 'left'):
+    if (v_let_sprites.sprites()[0].rect.x < -48 or player.route == 'right' and player.rect.x >= 828) and (v_let_sprites.sprites()[1].rect.x > 1920 + 48 or player.route == 'left' and player.rect.x <= 828):
         cmr.update(player)
         cmr.apply(player)
         cmr.apply(map)

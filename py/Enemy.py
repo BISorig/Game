@@ -1,7 +1,7 @@
 import random
 
 import pygame.sprite
-from py.Tile import h_let_sprites
+from py.Tile import h_let_sprites, v_let_sprites
 from py.load_image import load_image
 enemys_group = pygame.sprite.Group()
 enemys_events = []

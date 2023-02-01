@@ -38,7 +38,7 @@ class Map(pygame.sprite.Sprite):
                         if i == 0:
                             Tile(image, x, y, 'h_let')
                         elif i == 17:
-                            Tile(image, x, y, 'v_let')
+                            Tile(image, x - 1, y - 1, 'v_let')
                         elif i == 16:
                             print(gid)
                             par = {}

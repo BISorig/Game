@@ -72,7 +72,7 @@ class Person(pygame.sprite.Sprite):
                                }}
         self.image = self.images['right']['Idle'][0]
         self.rect = self.image.get_rect()
-        self.rect = self.rect.move(300, 300)
+        self.rect = self.rect.move(480, 300)
         self.route = 'right'
         self.num_images = 0
         self.step = par_person['step']
@@ -156,8 +156,10 @@ class Person(pygame.sprite.Sprite):
                         self.rect.x += self.step * k
                         self.num_images %= 10
                     print(v_let_sprites.sprites()[0].rect.x, self.rect.x)
-                    if pygame.sprite.spritecollideany(self, v_let_sprites):
-                        self.rect.x -= self.step * k
+                    for i in v_let_sprites.sprites():
+                        if pygame.sprite.collide_mask(self, i) and self.route == 'left':
+                            self.rect.x -= self.step * k
+                            break
             if key == 1073742049 and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
                 keydown.remove(1073742049)
                 self.mode = 'Roll'
