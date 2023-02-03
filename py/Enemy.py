@@ -130,9 +130,10 @@ class Enemy(pygame.sprite.Sprite):
         if self.num_images == self.params['attack_pict_num'] and self.mode == 'Attack':
             self.mode = 'Idle'
             self.num_images = 0
-            self.fl = 0
         if self.mode == 'Attack':
             self.num_images %= self.params['attack_pict_num']
+            if self.num_images == 0:
+                self.fl = 1
             if self.num_images == self.params['attack_motion_pict_num']:
                 if self.route == 'right' and not (pygame.sprite.collide_mask(self, player) and player.mode == 'BlockIdle'):
                     self.rect.x += self.params['attack_motion']
@@ -147,7 +148,8 @@ class Enemy(pygame.sprite.Sprite):
             #     self.a = self.rect.x
             # if self.num_images == self.params['attack_pict_num'] - 1:
             #     #print(self.rect.x - self.a)
-            if player.mode not in ['BlockIdle', 'Roll'] and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2]:
+            if player.mode not in ['BlockIdle', 'Roll'] and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2] and self.fl:
+                self.fl = 0
                 player.hp -= self.damage
                 if player.mode not in ['BlockIdle', 'Death']:
                     player.hit(self)

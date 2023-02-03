@@ -156,7 +156,7 @@ class Person(pygame.sprite.Sprite):
                         self.rect.x += self.step * k
                         self.num_images %= 10
                         if pygame.sprite.spritecollideany(self, v_let_sprites):
-                            self.rect.x -= self.step * л
+                            self.rect.x -= self.step * k
 
             if key == 1073742049 and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
                 keydown.remove(1073742049)
