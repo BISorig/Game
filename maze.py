@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+from test import *
 
 
 pygame.init()
@@ -114,6 +115,21 @@ def you_passed_maze():
     surf = pygame.font.SysFont('Corbel', 100)
     text_hp = surf.render('hp', True, pygame.Color('dark red'))
     text_damage = surf.render('damage', True, pygame.Color('dark red'))
+    text_speed = surf.render('speed', True, pygame.Color('dark red'))
+    text_okay = surf.render('confirm', True, pygame.Color('dark red'))
+
+    rules_prise = ['hp: +20%', 'damage: +20%', 'speed: +20%']
+    font = pygame.font.Font(None, 50)
+    text_coord = 400
+    for line in rules_prise:
+        line_rendered = font.render(line, 1, pygame.Color("dark red"))
+        line_rect = line_rendered.get_rect()
+        text_coord += 50
+        line_rect.top = text_coord
+        line_rect.x = 100
+        text_coord += line_rect.height
+        screen.blit(line_rendered, line_rect)
+    prise = ''
 
     while True:
         for event in pygame.event.get():
@@ -121,20 +137,40 @@ def you_passed_maze():
                 terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse = pygame.mouse.get_pos()
-                if 650 < mouse[0] < 750 and 800 < mouse[1] < 900:
-                    return 'hp'
-                if 1150 < mouse[0] < 1300 and 800 < mouse[1] < 900:
-                    return 'damage'
+                pygame.draw.rect(screen, (0, 0, 0), ((302, 840), (1588, 120)))
+                if 312 < mouse[0] < 412 and 850 < mouse[1] < 950:
+                    prise = 'hp'
+                    pygame.draw.rect(screen, (100, 100, 100), ((302, 840), (120, 120)))
+                if 724 < mouse[0] < 1024 and 850 < mouse[1] < 950:
+                    prise = 'damage'
+                    pygame.draw.rect(screen, (100, 100, 100), ((714, 840), (350, 120)))
+                if 1336 < mouse[0] < 1586 and 850 < mouse[1] < 950:
+                    prise = 'speed'
+                    pygame.draw.rect(screen, (100, 100, 100), ((1326, 840), (260, 120)))
+                if 1400 < mouse[0] < 1750 and 500 < mouse[1] < 600:
+                    pygame.draw.rect(screen, pygame.Color('white'), ((1390, 490), (330, 110)), 5)
+                    if prise != '':
+                        return prise
         pos_m = pygame.mouse.get_pos()
-        if 650 < pos_m[0] < 750 and 800 < pos_m[1] < 900:
-            pygame.draw.circle(screen, pygame.Color('white'), (700, 850), 75, 5)
-        elif 1150 < pos_m[0] < 1300 and 800 < pos_m[1] < 900:
-            pygame.draw.circle(screen, pygame.Color('white'), (1210, 850), 75, 5)
+        if 312 < pos_m[0] < 412 and 850 < pos_m[1] < 950:
+            pygame.draw.rect(screen, pygame.Color('white'), ((302, 840), (120, 120)), 5)
+        elif 724 < pos_m[0] < 1024 and 850 < pos_m[1] < 950:
+            pygame.draw.rect(screen, pygame.Color('white'), ((714, 840), (350, 120)), 5)
+        elif 1336 < pos_m[0] < 1586 and 850 < pos_m[1] < 950:
+            pygame.draw.rect(screen, pygame.Color('white'), ((1326, 840), (260, 120)), 5)
+        elif 1400 < pos_m[0] < 1750 and 500 < pos_m[1] < 600:
+            pygame.draw.rect(screen, pygame.Color('white'), ((1390, 490), (330, 110)), 5)
+            text_okay = surf.render('confirm', True, pygame.Color('light green'))
         else:
-            pygame.draw.circle(screen, pygame.Color('black'), (700, 850), 75, 5)
-            pygame.draw.circle(screen, pygame.Color('black'), (1210, 850), 75, 5)
-        screen.blit(text_hp, (650, 800))
-        screen.blit(text_damage, (1150, 800))
+            pygame.draw.rect(screen, pygame.Color('black'), ((1390, 490), (330, 110)))
+            text_okay = surf.render('confirm', True, pygame.Color('dark red'))
+            pygame.draw.rect(screen, pygame.Color('black'), ((302, 840), (120, 120)), 5)
+            pygame.draw.rect(screen, pygame.Color('black'), ((714, 840), (350, 120)), 5)
+            pygame.draw.rect(screen, pygame.Color('black'), ((1326, 840), (260, 120)), 5)
+        screen.blit(text_okay, (1400, 500))
+        screen.blit(text_hp, (312, 850))
+        screen.blit(text_damage, (724, 850))
+        screen.blit(text_speed, (1336, 850))
         pygame.display.flip()
         clock.tick(fps)
 
@@ -250,11 +286,12 @@ while running:
         else:
             print('возвращаемся на основную карту')
     if pygame.sprite.spritecollideany(player, exit_sprite):
-        if you_passed_maze() == 'hp':
+        prise = you_passed_maze()
+        if prise == 'hp':
             print('получаем хп')
-        if you_passed_maze() == 'damage':
+        if prise == 'damage':
             print('получаем урон')
-        if you_passed_maze() == 'speed':
+        if prise == 'speed':
             print('получаем скорость')
     screen.fill((0, 0, 0))
     fon()
