@@ -23,7 +23,7 @@ def visibility():
 
 
 def fon():
-    bg = pygame.image.load('textures/wall.jpg')
+    bg = pygame.image.load('textures/pol.jpg')
     bg = pygame.transform.scale(bg, (1900, 1000))
     screen.blit(bg, (0, 0))
 
@@ -41,9 +41,10 @@ def load_image(name):
 tile_images = {
     'wall': load_image('wall.jpg'),
     'empty': load_image('pol.jpg'),
-    'leave': load_image('door_leave.png'),
-    'exit': load_image('door_exit.png')
+    'leave': load_image('door_leave.jpg'),
+    'exit': load_image('door_exit.jpg')
 }
+
 player_image = load_image('hero.png')
 
 title_width = title_height = 200
