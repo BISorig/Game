@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 
+
 pygame.init()
 size = width, height = 1900, 1000
 screen = pygame.display.set_mode(size)
@@ -53,29 +54,87 @@ def terminate():
 
 
 def you_really_want_leave():
-    rules = ['ЗАСТАВКА', '', 'Правила игры', 'Если в правилах несколько строк,',
-             'приходится выводить их построчно']
-    font = pygame.font.Font(None, 30)
+    rules = ['ВЫ ТОЧНО ХОТИТЕ ВЕРНУТЬСЯ', ' БЕЗ НАГРАДЫ?']
+    font = pygame.font.Font(None, 50)
     bg = pygame.image.load('textures/true_leave.png')
-    bg = pygame.transform.scale(bg, (500, 500))
-    screen.blit(bg, (0, 0))
+    bg = pygame.transform.scale(bg, (1000, 200))
+    screen.blit(bg, (450, 0))
     text_coord = 50
     for line in rules:
-        line_rendered = font.render(line, 1, pygame.Color("black"))
+        line_rendered = font.render(line, 1, pygame.Color("dark red"))
         line_rect = line_rendered.get_rect()
         text_coord += 10
         line_rect.top = text_coord
-        line_rect.x = 10
+        line_rect.x = 650
         text_coord += line_rect.height
         screen.blit(line_rendered, line_rect)
+    surf = pygame.font.SysFont('Corbel', 100)
+    text_true_button = surf.render('yes', True, pygame.Color('dark red'))
+    text_false_button = surf.render('no', True, pygame.Color('dark red'))
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse = pygame.mouse.get_pos()
+                if 650 < mouse[0] < 750 and 800 < mouse[1] < 900:
+                    return True
+                if 1150 < mouse[0] < 1300 and 800 < mouse[1] < 900:
+                    return False
+        pos_m = pygame.mouse.get_pos()
+        if 650 < pos_m[0] < 750 and 800 < pos_m[1] < 900:
+            pygame.draw.circle(screen, pygame.Color('white'), (700, 850), 75, 5)
+        elif 1150 < pos_m[0] < 1300 and 800 < pos_m[1] < 900:
+            pygame.draw.circle(screen, pygame.Color('white'), (1210, 850), 75, 5)
+        else:
+            pygame.draw.circle(screen, pygame.Color('black'), (700, 850), 75, 5)
+            pygame.draw.circle(screen, pygame.Color('black'), (1210, 850), 75, 5)
+        screen.blit(text_false_button, (650, 800))
+        screen.blit(text_true_button, (1150, 800))
+        pygame.display.flip()
+        clock.tick(fps)
+
+
+def you_passed_maze():
+    rules = ['ВЫ ПРОШЛИ ЛАБИРИНТ,', 'МОЖЕТЕ ВЫБРАТЬ ОДНУ ИЗ НАГРАД']
+    font = pygame.font.Font(None, 50)
+    bg = pygame.image.load('textures/true_leave.png')
+    bg = pygame.transform.scale(bg, (1000, 200))
+    screen.blit(bg, (450, 0))
+    text_coord = 50
+    for line in rules:
+        line_rendered = font.render(line, 1, pygame.Color("dark red"))
+        line_rect = line_rendered.get_rect()
+        text_coord += 10
+        line_rect.top = text_coord
+        line_rect.x = 650
+        text_coord += line_rect.height
+        screen.blit(line_rendered, line_rect)
+    surf = pygame.font.SysFont('Corbel', 100)
+    text_hp = surf.render('hp', True, pygame.Color('dark red'))
+    text_damage = surf.render('damage', True, pygame.Color('dark red'))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse = pygame.mouse.get_pos()
+                if 650 < mouse[0] < 750 and 800 < mouse[1] < 900:
+                    return 'hp'
+                if 1150 < mouse[0] < 1300 and 800 < mouse[1] < 900:
+                    return 'damage'
+        pos_m = pygame.mouse.get_pos()
+        if 650 < pos_m[0] < 750 and 800 < pos_m[1] < 900:
+            pygame.draw.circle(screen, pygame.Color('white'), (700, 850), 75, 5)
+        elif 1150 < pos_m[0] < 1300 and 800 < pos_m[1] < 900:
+            pygame.draw.circle(screen, pygame.Color('white'), (1210, 850), 75, 5)
+        else:
+            pygame.draw.circle(screen, pygame.Color('black'), (700, 850), 75, 5)
+            pygame.draw.circle(screen, pygame.Color('black'), (1210, 850), 75, 5)
+        screen.blit(text_hp, (650, 800))
+        screen.blit(text_damage, (1150, 800))
         pygame.display.flip()
         clock.tick(fps)
 
@@ -155,7 +214,7 @@ running = True
 true_button = [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_DOWN, pygame.K_UP,
                pygame.K_d, pygame.K_a, pygame.K_w, pygame.K_s]
 check_button = []
-hero_move_right = hero_move_left = hero_move_up = hero_move_down = False
+copy_button = []
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -169,32 +228,34 @@ while running:
     for button in check_button:
         if button == pygame.K_LEFT or button == pygame.K_a:
             player.rect.x -= STEP
-            if pygame.sprite.spritecollideany(player, leave_sprite):
-                you_really_want_leave()
-                player.rect.x += STEP
             if pygame.sprite.spritecollideany(player, box_group):
                 player.rect.x += STEP
         if button == pygame.K_RIGHT or button == pygame.K_d:
             player.rect.x += STEP
-            if pygame.sprite.spritecollideany(player, leave_sprite):
-                you_really_want_leave()
-                player.rect.x -= STEP
             if pygame.sprite.spritecollideany(player, box_group):
                 player.rect.x -= STEP
         if button == pygame.K_UP or button == pygame.K_w:
             player.rect.y -= STEP
-            if pygame.sprite.spritecollideany(player, leave_sprite):
-                you_really_want_leave()
-                player.rect.y += STEP
             if pygame.sprite.spritecollideany(player, box_group):
                 player.rect.y += STEP
         if button == pygame.K_DOWN or button == pygame.K_s:
             player.rect.y += STEP
-            if pygame.sprite.spritecollideany(player, leave_sprite):
-                you_really_want_leave()
-                player.rect.y -= STEP
             if pygame.sprite.spritecollideany(player, box_group):
                 player.rect.y -= STEP
+    if pygame.sprite.spritecollideany(player, leave_sprite):
+        check_button = []
+        if you_really_want_leave():
+            print('продолжаем проходить лабиринт')
+            player.rect.y -= STEP
+        else:
+            print('возвращаемся на основную карту')
+    if pygame.sprite.spritecollideany(player, exit_sprite):
+        if you_passed_maze() == 'hp':
+            print('получаем хп')
+        if you_passed_maze() == 'damage':
+            print('получаем урон')
+        if you_passed_maze() == 'speed':
+            print('получаем скорость')
     screen.fill((0, 0, 0))
     fon()
     camera.update(player)
