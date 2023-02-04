@@ -10,7 +10,7 @@ pygame.init()
 pygame.mouse.set_visible(False)
 size = w, h = 1900, 1000
 screen = pygame.display.set_mode(size)
-WASD = [pygame.K_w, pygame.K_d, pygame.K_a, 1073742049]
+WASD = [pygame.K_d, pygame.K_a, 1073742049]
 player = Person(100, 100, 250, 165)
 map = Map(player)
 cmr = Camera(w, h)

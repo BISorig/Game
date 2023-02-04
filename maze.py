@@ -209,9 +209,38 @@ def Maze(screen):
     class Player(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y):
             super().__init__(player_group, all_sprites)
-            self.image = player_image
+            size_person = (150, 100)
+            self.images = {"right": {'Idle': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"), size_person) for i in range(8)],
+                                     'Run': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"), size_person)
+                                             for i in range(10)],
+                                     'Death': [pygame.transform.scale(pygame.image.load(
+                                         f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"), size_person)
+                                               for i in range(10)]
+                                     },
+
+                           "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(
+                               pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
+                               size_person), True, False)
+                                             for i in range(8)],
+                                    'Run': [pygame.transform.flip(pygame.transform.scale(
+                                        pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"),
+                                        size_person), True, False)
+                                            for i in range(10)],
+                                    'Death': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(
+                                        f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"), size_person),
+                                                                    True, False)
+                                              for i in range(10)]
+
+                                    }
+                           }
+            self.image = self.images['right']['Idle'][0]
             self.rect = self.image.get_rect()
             self.rect = self.rect.move(tile_width * pos_x + 50, tile_height * pos_y + 50)
+            self.num_images = 0
+            self.event = pygame.USEREVENT + 100
+            self.mode = 'Idle'
+            pygame.time.set_timer(self.event, 100)
+            self.route = 'right'
 
 
     def generate_level(level):
@@ -262,6 +291,8 @@ def Maze(screen):
     copy_button = []
     while running:
         print(player.rect)
+        player.mode = 'Idle'
+        player.route = 'right'
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -271,23 +302,29 @@ def Maze(screen):
             if event.type == pygame.KEYUP:
                 if event.key in true_button and event.key in check_button:
                     check_button.remove(event.key)
+            if event.type == player.event:
+                player.num_images += 1
+                player.num_images %= 8
         for button in check_button:
+            player.mode = 'Run'
             if button == pygame.K_LEFT or button == pygame.K_a:
                 player.rect.x -= STEP
+                player.route = 'left'
                 if pygame.sprite.spritecollideany(player, box_group):
                     player.rect.x += STEP
-            if button == pygame.K_RIGHT or button == pygame.K_d:
+            elif button == pygame.K_RIGHT or button == pygame.K_d:
                 player.rect.x += STEP
                 if pygame.sprite.spritecollideany(player, box_group):
                     player.rect.x -= STEP
-            if button == pygame.K_UP or button == pygame.K_w:
+            elif button == pygame.K_UP or button == pygame.K_w:
                 player.rect.y -= STEP
                 if pygame.sprite.spritecollideany(player, box_group):
                     player.rect.y += STEP
-            if button == pygame.K_DOWN or button == pygame.K_s:
+            elif button == pygame.K_DOWN or button == pygame.K_s:
                 player.rect.y += STEP
                 if pygame.sprite.spritecollideany(player, box_group):
                     player.rect.y -= STEP
+        player.image = player.images[player.route][player.mode][player.num_images]
         if pygame.sprite.spritecollideany(player, leave_sprite):
             check_button = []
             if you_really_want_leave():
@@ -323,5 +360,3 @@ def Maze(screen):
         player_group.draw(screen)
         pygame.display.flip()
         visibility()
-
-Maze(screen)
