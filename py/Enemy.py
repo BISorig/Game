@@ -62,6 +62,8 @@ class Enemy(pygame.sprite.Sprite):
         self.damage = params['damage']
         self.params = params
         self.events = [self.event]
+        while not pygame.sprite.spritecollideany(self, h_let_sprites):
+            self.rect.y += self.step
 
     def update(self, player):
         self.death()
@@ -73,7 +75,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.pr_mode = self.mode
                 self.mode = 'Idle'
                 self.num_images = 0
-            elif self.params['radius'] < abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2)) <= 1000 and self.mode not in ['Run', 'Attack', 'Hit']:
+            elif abs((player.rect.x + player.image.get_width() // 2) - (self.rect.x + self.image.get_width() // 2)) <= 1000 and self.mode not in ['Run', 'Attack', 'Hit']:
                 self.pr_mode = self.mode
                 self.mode = 'Run'
                 self.num_images = 0
@@ -97,9 +99,8 @@ class Enemy(pygame.sprite.Sprite):
                 self.pr_mode = 'Attack'
                 pygame.time.set_timer(self.event, self.params['attack_event_time'])
 
-
-
-            self.hit(player)
+            if player.mode == 'Attack' or self.mode == 'Hit':
+                self.hit(player)
             self.turn(player)
 
             self.motion(player)
@@ -123,8 +124,7 @@ class Enemy(pygame.sprite.Sprite):
             if self.route == 'left':
                 turn = -1
             self.rect.x += self.step * turn
-        if not pygame.sprite.spritecollideany(self, h_let_sprites):
-            self.rect.y += self.step
+
 
     def attack(self, player):
         if self.num_images == self.params['attack_pict_num'] and self.mode == 'Attack':
@@ -140,18 +140,14 @@ class Enemy(pygame.sprite.Sprite):
 
                 elif not (pygame.sprite.collide_mask(self, player) and player.mode == 'BlockIdle'):
                     self.rect.x -= self.params['attack_motion']
-                elif self.route == 'right':
+            if player.mode not in ['Roll'] and pygame.sprite.collide_mask(self, player) and self.fl:
+                self.fl = 0
+                if self.route == 'right':
                     player.rect.x += player.step
                 else:
                     player.rect.x -= player.step
-            # if self.num_images == 0:
-            #     self.a = self.rect.x
-            # if self.num_images == self.params['attack_pict_num'] - 1:
-            #     #print(self.rect.x - self.a)
-            if player.mode not in ['BlockIdle', 'Roll'] and pygame.sprite.collide_mask(self, player) and self.num_images not in [0, 1, 2] and self.fl:
-                self.fl = 0
-                player.hp -= self.damage
                 if player.mode not in ['BlockIdle', 'Death']:
+                    player.hp -= self.damage
                     player.hit(self)
 
     def death(self):

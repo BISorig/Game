@@ -4,6 +4,7 @@ from py.Person import all_sprites
 from py.Enemy import *
 import pygame
 import  sqlite3
+from py.Portal import Portal
 
 enemys = []
 con = sqlite3.connect("data\\bd\\parameters.db")
@@ -25,7 +26,7 @@ class Map(pygame.sprite.Sprite):
         self.height = self.map.height
         self.width = self.map.width
         self.tile_size = 48
-        for i in range(17):
+        for i in range(18):
             for y in range(self.height):
                 for x in range(self.width):
                     image = self.map.get_tile_image(x, y, i)
@@ -36,17 +37,23 @@ class Map(pygame.sprite.Sprite):
                     if image:
                         if i == 0:
                             Tile(image, x, y, 'h_let')
+                        elif i == 17:
+                            Portal(x * self.tile_size, y * self.tile_size)
                         elif i == 16:
                             Tile(image, x - 1, y - 1, 'v_let')
                         elif i == 15:
                             print(gid)
                             par = {}
                             if gid == 574:
-                                a = 0
-                            else:
-                                a = 5
+                                enemy = 9    # skel
+                            elif gid == 575:
+                                enemy = 2    # gob
+                            elif gid == 576:
+                                enemy = 4  # hunt
+                            elif gid == 577:
+                                enemy = 7  # med war 3
                             for j in range(16):
-                                par[res[j][1]] = res2[a][j]
+                                par[res[j][1]] = res2[enemy][j]
                             enemys.append((Enemy(par, x * self.tile_size, y * self.tile_size), pygame.NUMEVENTS - 1 - len(enemys) * 2, pygame.NUMEVENTS - 2 - len(enemys) * 2))
                         elif i in [2, 6, 7, 10, 12, 14]:
                             self.image.blit(image, (x * self.tile_size, y * self.tile_size))

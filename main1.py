@@ -1,6 +1,7 @@
 from py.Person import *
 from py.Camera import *
 from py.Map import *
+from py.Portal import portal_group
 
 
 pygame.init()
@@ -57,6 +58,7 @@ while run:
         for i in enemys_group.sprites():
             cmr.apply(i)
     player_group.draw(screen)
+    portal_group.draw(screen)
     screen.blit(player.text, (100, 100))
     enemys_group.draw(screen)
     pygame.display.flip()

@@ -119,50 +119,35 @@ class Person(pygame.sprite.Sprite):
                 self.rect.x -= self.step
                 if pygame.sprite.spritecollideany(self, v_let_sprites):
                     self.rect.x += self.step
-        if not keydown and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
+        if (not keydown or keydown[:2] in [[pygame.K_d, pygame.K_a], [pygame.K_a, pygame.K_d]]) and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
             self.mode = "Idle"
             self.num_images %= 8
-        if pygame.K_w not in keydown:
-            self.jump_m = -1
-        for key in keydown[:2]:
-            if key == pygame.K_w:
-                if self.mode not in ['Jump', 'Attack', 'Roll', 'BlockIdle', 'Hit']:
-                    self.mode = "Jump"
-                    self.jump_m = 0
-                if self.jump_m < self.jump and self.jump_m != -1:
-                    self.jump_m += self.jump_h
-                    self.rect.y -= self.jump_h
-                    if self.mode not in ["Attack", 'Roll', 'BlockIdle', 'Hit']:
-                        self.num_images = 1
-                elif self.jump_m == self.jump:
-                    self.jump_m = -1
-                    if pygame.K_w in keydown:
-                        keydown.remove(pygame.K_w)
-
-            if key in [pygame.K_a, pygame.K_d]:
-                if self.mode not in ['Run', 'Jump', 'Attack', 'Roll', 'BlockIdle', 'Hit']:
-                    self.mode = 'Run'
-                    self.num_images = 0
-                else:
-                    self.pr_mode = 'Run'
-                if self.mode != 'Hit':
-                    if key == pygame.K_a and self.mode != 'Hit':
-                        k = -1
-                        self.route = 'left'
+        if keydown[:2] not in [[pygame.K_d, pygame.K_a], [pygame.K_a, pygame.K_d]]:
+            for key in keydown[:2]:
+                if key in [pygame.K_a, pygame.K_d]:
+                    if self.mode not in ['Run', 'Jump', 'Attack', 'Roll', 'BlockIdle', 'Hit']:
+                        self.mode = 'Run'
+                        self.num_images = 0
                     else:
-                        k = 1
-                        self.route = 'right'
-                    if self.mode not in ['Attack', 'Roll', 'BlockIdle']:
-                        self.rect.x += self.step * k
-                        self.num_images %= 10
-                        if pygame.sprite.spritecollideany(self, v_let_sprites):
-                            self.rect.x -= self.step * k
+                        self.pr_mode = 'Run'
+                    if self.mode != 'Hit':
+                        if key == pygame.K_a and self.mode != 'Hit':
+                            k = -1
+                            self.route = 'left'
+                        else:
+                            k = 1
+                            self.route = 'right'
+                        if self.mode not in ['Attack', 'Roll', 'BlockIdle']:
+                            self.rect.x += self.step * k
+                            self.num_images %= 10
+                            if pygame.sprite.spritecollideany(self, v_let_sprites):
+                                self.rect.x -= self.step * k
 
-            if key == 1073742049 and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
-                keydown.remove(1073742049)
-                self.mode = 'Roll'
-                self.num_images = 0
-                pygame.time.set_timer(self.event, 75)
+                if key == 1073742049 and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
+                    keydown.remove(1073742049)
+                    self.mode = 'Roll'
+                    self.num_images = 0
+                    pygame.time.set_timer(self.event, 75)
 
         if not pygame.sprite.spritecollideany(self, h_let_sprites) and self.jump_m == -1:
             if self.mode != 'Attack':
@@ -173,7 +158,7 @@ class Person(pygame.sprite.Sprite):
             self.mode = self.pr_mode
 
     def attack(self, mouse_down):
-        if mouse_down == 1 and self.mode != 'Hit':
+        if mouse_down == 1 and self.mode not in ['Hit', 'BlockIdle']:
             self.attack_queue += 1
             if self.mode != 'Attack':
                 pygame.time.set_timer(self.event, 75)
