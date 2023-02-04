@@ -1,3 +1,5 @@
+import pygame
+
 from py.Person import *
 from py.Camera import *
 from py.Map import *
@@ -8,8 +10,8 @@ from maze import *
 
 pygame.init()
 pygame.mouse.set_visible(False)
-size = w, h = 1900, 1000
-screen = pygame.display.set_mode(size)
+size = w, h = 1920, 1080
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 WASD = [pygame.K_d, pygame.K_a, 1073742049]
 player = Person(100, 100, 250, 165)
 map = Map(player)
@@ -30,8 +32,9 @@ while run:
             if event.key in WASD:
                 num_images = 1
                 motion_keydown.append(event.key)
-            elif event.key == pygame.K_e and portal_group.sprites()[0].button.draw_fl:
-                Maze(screen)
+            elif event.key == pygame.K_e and portal_group.sprites()[0].button.draw_fl and not portal_group.sprites()[0].button.done:
+                if Maze(screen):
+                    portal_group.sprites()[0].button.done = 1
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_down = event.button
         if event.type == pygame.MOUSEBUTTONUP and event.button == 3:
@@ -47,7 +50,7 @@ while run:
                     enemy[0].num_images += 1
         if event.type == portal_group.sprites()[0].event:
             portal_group.sprites()[0].update()
-        if event.type in button_events and portal_group.sprites()[0].button.draw_fl:
+        if event.type in button_events and portal_group.sprites()[0].button.draw_fl and not portal_group.sprites()[0].button.done:
             portal_group.sprites()[0].button.update()
 
 
@@ -62,18 +65,20 @@ while run:
         cmr.apply(map)
         cmr.apply(portal_group.sprites()[0])
         cmr.apply(portal_group.sprites()[0].button)
+        cmr.apply(button_group.sprites()[1])
         for i in v_let_sprites.sprites():
             cmr.apply(i)
         for i in h_let_sprites.sprites():
             cmr.apply(i)
         for i in enemys_group.sprites():
             cmr.apply(i)
-    if portal_group.sprites()[0].button.draw_fl:
+    if portal_group.sprites()[0].button.draw_fl or player.rect.x > 1650:
+        print(button_group.sprites()[1].rect)
         button_group.draw(screen)
-        print(1)
     portal_group.draw(screen)
     player_group.draw(screen)
     screen.blit(player.text, (100, 100))
+
     enemys_group.draw(screen)
     pygame.display.flip()
 pygame.quit()

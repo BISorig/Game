@@ -4,7 +4,7 @@ from py.Person import all_sprites
 from py.Enemy import *
 import pygame
 import  sqlite3
-from py.Portal import Portal
+from py.Portal import  *
 
 enemys = []
 con = sqlite3.connect("data\\bd\\parameters.db")
@@ -64,6 +64,32 @@ class Map(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(0, 0)
+        instructions = [pygame.transform.scale(pygame.image.load(f"data\\GameMap\\map\\instructions\\{i}.png"), (128, 128)) for i in ['left_mouse', 'right_mouse']]
+        keys = [pygame.transform.scale(pygame.image.load(f"data\\Keys\\{i}-Key.png").subsurface((0, 0, 32, 32)), (64, 64)) for i in ['A', 'D']]
+        shift = pygame.transform.scale(pygame.image.load(f"data\\Keys\\Shift-Key.png").subsurface((0, 0, 48, 32)), (96, 64))
+        self.image.blit(instructions[0], (1400, 300))
+        font = pygame.font.Font(None, 36)
+        self.text_attack = font.render('Attack', True, 'red')
+        self.image.blit(self.text_attack, (1428, 450))
+
+        self.image.blit(instructions[1], (1550, 300))
+        font = pygame.font.Font(None, 36)
+        self.text_attack = font.render('Block', True, 'red')
+        self.image.blit(self.text_attack, (1582, 450))
+
+        self.image.blit(keys[0], (1700, 370))
+        self.image.blit(keys[1], (1764, 370))
+        font = pygame.font.Font(None, 36)
+        self.text_attack = font.render('Motion', True, 'red')
+        self.image.blit(self.text_attack, (1725, 450))
+
+        self.image.blit(shift, (1864, 370))
+        font = pygame.font.Font(None, 36)
+        self.text_attack = font.render('Dodge', True, 'red')
+        self.image.blit(self.text_attack, (1876, 450))
+
+        button_end = Button('E')
+        button_end.rect = button_end.rect.move(535 * 48 - 500, 400)
 
     def get_tile_id(self, position):
         return self.map.tiledgidmap(self.map.get_tile_gid(*position, 0))

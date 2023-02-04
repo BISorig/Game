@@ -334,6 +334,7 @@ def Maze(screen):
             else:
                 running = False
                 print('возвращаемся на основную карту')
+                return False
         if pygame.sprite.spritecollideany(player, exit_sprite):
             prise = you_passed_maze()
             con = sqlite3.connect('data\\bd\\parameters.db')
@@ -351,6 +352,8 @@ def Maze(screen):
                 cur.execute(f"""UPDATE Person SET step = {speed * 1.2}""")
                 con.commit()
             running = False
+            return True
+
         screen.fill((0, 0, 0))
         fon()
         camera.update(player)

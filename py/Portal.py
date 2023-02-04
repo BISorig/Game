@@ -23,11 +23,11 @@ class Portal(pygame.sprite.Sprite):
         self.player = player
 
     def update(self):
-        print(self.button.rect)
+
         self.num_images += 1
         self.num_images %= 9
         self.image = self.images[self.num_images]
-        if pygame.sprite.collide_mask(self.player, self):
+        if pygame.sprite.collide_mask(self.player, self) and not self.button.done:
             self.button.draw_fl = 1
         else:
             self.button.draw_fl = 0

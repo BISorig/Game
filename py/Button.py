@@ -16,6 +16,7 @@ class Button(pygame.sprite.Sprite):
         pygame.time.set_timer(self.event, 500)
         button_events.append(self.event)
         self.draw_fl = 0
+        self.done = 0
 
     def update(self):
         self.num_images += 1

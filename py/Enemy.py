@@ -123,7 +123,8 @@ class Enemy(pygame.sprite.Sprite):
             turn = 1
             if self.route == 'left':
                 turn = -1
-            self.rect.x += self.step * turn
+            if not pygame.sprite.spritecollideany(self, v_let_sprites):
+                self.rect.x += self.step * turn
 
 
     def attack(self, player):
@@ -142,10 +143,11 @@ class Enemy(pygame.sprite.Sprite):
                     self.rect.x -= self.params['attack_motion']
             if player.mode not in ['Roll'] and pygame.sprite.collide_mask(self, player) and self.fl:
                 self.fl = 0
-                if self.route == 'right':
-                    player.rect.x += player.step
-                else:
-                    player.rect.x -= player.step
+                if not pygame.sprite.spritecollideany(player, v_let_sprites):
+                    if self.route == 'right':
+                        player.rect.x += player.step
+                    else:
+                        player.rect.x -= player.step
                 if player.mode not in ['BlockIdle', 'Death']:
                     player.hp -= self.damage
                     player.hit(self)
