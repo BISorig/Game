@@ -7,7 +7,7 @@ from test import *
 pygame.init()
 size = width, height = 1900, 1000
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("MAZE")
+pygame.display.set_caption("HARD MAZE")
 STEP = 50
 fps = 300
 clock = pygame.time.Clock()
@@ -246,7 +246,7 @@ player_group = pygame.sprite.Group()
 box_group = pygame.sprite.Group()
 camera = Camera()
 player = None
-player, level_x, level_y = generate_level(load_level('maze.txt'))
+player, level_x, level_y = generate_level(load_level('maze_hard.txt'))
 running = True
 true_button = [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_DOWN, pygame.K_UP,
                pygame.K_d, pygame.K_a, pygame.K_w, pygame.K_s]
@@ -301,6 +301,6 @@ while running:
         camera.apply(sprite)
     tiles_group.draw(screen)
     player_group.draw(screen)
-    visibility()
     pygame.display.flip()
+    visibility()
     clock.tick(fps)
