@@ -16,7 +16,7 @@ print(res2)
 
 
 class Map(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, player):
         super().__init__(all_sprites)
         self.image = pygame.Surface((535 * 48, 1080))
         self.map = pytmx.load_pygame('data\\GameMap\\map\\tiled\\Level_0.tmx')
@@ -38,7 +38,7 @@ class Map(pygame.sprite.Sprite):
                         if i == 0:
                             Tile(image, x, y, 'h_let')
                         elif i == 17:
-                            Portal(x * self.tile_size, y * self.tile_size)
+                            portal = Portal(x * self.tile_size, y * self.tile_size, player)
                         elif i == 16:
                             Tile(image, x - 1, y - 1, 'v_let')
                         elif i == 15:

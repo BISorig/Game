@@ -12,10 +12,11 @@ par_person = {}
 for i in range(len(res_person)):
     par_person[res_person[i][1]] = res2_person[0][i]
 
+
 class Person(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, w, h):
         super().__init__(player_group, all_sprites)
-        size_person = (x, y)
+        size_person = (w, h)
         self.images = {"right": {'Idle': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"), size_person)
                                            for i in range(8)],
                                  'Run': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"), size_person)
@@ -72,7 +73,7 @@ class Person(pygame.sprite.Sprite):
                                }}
         self.image = self.images['right']['Idle'][0]
         self.rect = self.image.get_rect()
-        self.rect = self.rect.move(480, 300)
+        self.rect = self.rect.move(x, y)
         self.route = 'right'
         self.num_images = 0
         self.step = par_person['step']
@@ -149,11 +150,11 @@ class Person(pygame.sprite.Sprite):
                     self.num_images = 0
                     pygame.time.set_timer(self.event, 75)
 
-        if not pygame.sprite.spritecollideany(self, h_let_sprites) and self.jump_m == -1:
-            if self.mode != 'Attack':
-                self.mode = "Jump"
-                self.num_images = 2
-            self.rect.y += self.jump_h
+        # if not pygame.sprite.spritecollideany(self, h_let_sprites) and self.jump_m == -1:
+        #     if self.mode != 'Attack':
+        #         self.mode = "Jump"
+        #         self.num_images = 2
+        #     self.rect.y += self.jump_h
         elif pygame.sprite.spritecollideany(self, h_let_sprites) and self.mode == 'Jump':
             self.mode = self.pr_mode
 
