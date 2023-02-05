@@ -5,7 +5,7 @@ from py.Camera import *
 from py.Map import *
 from py.Portal import portal_group
 from py.Button import button_group, button_events
-from maze import *
+from py.maze import *
 
 WASD = [pygame.K_d, pygame.K_a, 1073742049]
 size = w, h = 1920, 1080
@@ -14,6 +14,7 @@ size = w, h = 1920, 1080
 class Level:
 
     def __init__(self, player, mp, level):
+        pygame.mouse.set_visible(False)
         self.map = mp
         self.level = level
         self.cmr = Camera(w, h)
