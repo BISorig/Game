@@ -123,9 +123,9 @@ class Enemy(pygame.sprite.Sprite):
             turn = 1
             if self.route == 'left':
                 turn = -1
-            if not pygame.sprite.spritecollideany(self, v_let_sprites):
-                self.rect.x += self.step * turn
-
+            self.rect.x += self.step * turn
+            if pygame.sprite.spritecollideany(self, v_let_sprites):
+                self.rect.x -= self.step * turn
 
     def attack(self, player):
         if self.num_images == self.params['attack_pict_num'] and self.mode == 'Attack':

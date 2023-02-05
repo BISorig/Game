@@ -1,3 +1,5 @@
+import sqlite3
+
 import pygame
 import os
 import sys
@@ -36,7 +38,7 @@ def checkmusicsound(text, stage):
         line_rect.x = 725
     if stage == 'music':
         line_rect.x = 875
-    bg = pygame.image.load('textures/fonmenu.png')
+    bg = pygame.image.load('../textures/fonmenu.png')
     bg = pygame.transform.scale(bg, (800, 300))
     screen.blit(bg, (560, 240))
     screen.blit(line_rendered, line_rect)
@@ -73,7 +75,7 @@ def yesorno(text, stage):
         text_button_yes = 'yes'
         text_button_no = 'no'
         line_rect.x = 600
-    bg = pygame.image.load('textures/fonmenu.png')
+    bg = pygame.image.load('../textures/fonmenu.png')
     bg = pygame.transform.scale(bg, (800, 300))
     screen.blit(bg, (560, 240))
     screen.blit(line_rendered, line_rect)
@@ -112,7 +114,7 @@ def createtext(text, color, x, y):
 
 
 pygame.display.set_caption("MENU")
-bg = pygame.image.load('textures/fonmenuosn.png')
+bg = pygame.image.load('../textures/fonmenuosn.png')
 bg = pygame.transform.scale(bg, (1920, 1080))
 screen.blit(bg, (0, 0))
 x1, y1 = 0, 150
@@ -164,7 +166,7 @@ while running:
     print(pos_m)
     if check_fill:
         pygame.display.set_caption("MENU")
-        bg = pygame.image.load('textures/fonmenuosn.png')
+        bg = pygame.image.load('../textures/fonmenuosn.png')
         bg = pygame.transform.scale(bg, (1920, 1080))
         screen.blit(bg, (0, 0))
         x1, y1 = 0, 150

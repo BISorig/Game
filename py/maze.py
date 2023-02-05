@@ -26,13 +26,13 @@ def Maze(screen):
 
 
     def fon():
-        bg = pygame.image.load('textures/pol.jpg')
+        bg = pygame.image.load('../textures/pol.jpg')
         bg = pygame.transform.scale(bg, (1900, 1000))
         screen.blit(bg, (0, 0))
 
 
     def load_image(name):
-        fullname = os.path.join('textures', name)
+        fullname = os.path.join('../textures', name)
         image = pygame.image.load(fullname)
         if name == 'hero.png':
             image = pygame.transform.scale(image, (150, 100))
@@ -59,7 +59,7 @@ def Maze(screen):
         pygame.mouse.set_visible(True)
         rules = ['ВЫ ТОЧНО ХОТИТЕ ВЕРНУТЬСЯ', ' БЕЗ НАГРАДЫ?']
         font = pygame.font.Font(None, 50)
-        bg = pygame.image.load('textures/true_leave.png')
+        bg = pygame.image.load('../textures/true_leave.png')
         bg = pygame.transform.scale(bg, (1000, 200))
         screen.blit(bg, (450, 0))
         text_coord = 50
@@ -98,12 +98,11 @@ def Maze(screen):
             screen.blit(text_true_button, (1150, 800))
             pygame.display.flip()
 
-
     def you_passed_maze():
         pygame.mouse.set_visible(True)
         rules = ['ВЫ ПРОШЛИ ЛАБИРИНТ,', 'МОЖЕТЕ ВЫБРАТЬ ОДНУ ИЗ НАГРАД']
         font = pygame.font.Font(None, 50)
-        bg = pygame.image.load('textures/true_leave.png')
+        bg = pygame.image.load('../textures/true_leave.png')
         bg = pygame.transform.scale(bg, (1000, 200))
         screen.blit(bg, (450, 0))
         text_coord = 50
@@ -249,7 +248,6 @@ def Maze(screen):
                     new_player = Player(x, y)
         return new_player, x, y
 
-
     class Camera:
         def __init__(self):
             self.dx = 0
@@ -323,7 +321,7 @@ def Maze(screen):
                 return False
         if pygame.sprite.spritecollideany(player, exit_sprite):
             prise = you_passed_maze()
-            con = sqlite3.connect('data\\bd\\parameters.db')
+            con = sqlite3.connect('../data/bd/parameters.db')
             cur = con.cursor()
             if prise == 'hp':
                 max_hp = cur.execute("SELECT max_hp FROM Person").fetchall()[0][0]

@@ -1,4 +1,4 @@
-from level import *
+from py.level import *
 from py.Map import Map
 from py.Button import button_group
 from py.Portal import portal_group
@@ -15,8 +15,10 @@ screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 player = Person(100, 100, 250, 165)
 if level == 1:
     level1 = {'size': (535 * 48, 1080), 'map': 'data\\GameMap\\map\\tiled\\Level_0.tmx',
-              'sky': 'data\\GameMap\\background\\Forest.png', 'sky_size': 800, 'layer_draw': (2, 8, 9, 12, 14),
-              'layer_h': 0, 'layer_portal': 19, 'layer_v': 18, 'layer_enemy': 17, 'cnt_layers': 20, 'skeleton': 574}
+              'sky': 'data\\GameMap\\background\\Forest.png', 'sky_size': 800,
+              'layer_draw': (2, 8, 9, 12, 14), 'layer_h': 0, 'layer_portal': 19, 'layer_v': 18,
+              'layer_enemy': 17, 'cnt_layers': 20, 'skeleton': 577, 'goblin': 576,
+              'huntress': 574, 'Martial Hero 3': 575}
     mp = Map(player, level1, level)
     Level(player, mp, 1)
 level = cur.execute("""SELECT level FROM Person""").fetchall()[0][0]
