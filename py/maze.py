@@ -3,7 +3,6 @@ import sqlite3
 import pygame
 import os
 import sys
-from py.Person import *
 
 
 pygame.init()
@@ -12,7 +11,7 @@ screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 pygame.display.set_caption("HARD MAZE")
 
 
-def Maze(screen):
+def Maze(screen, level):
     STEP = 50
 
 
@@ -119,8 +118,13 @@ def Maze(screen):
         text_damage = surf.render('damage', True, pygame.Color('dark red'))
         text_speed = surf.render('speed', True, pygame.Color('dark red'))
         text_okay = surf.render('confirm', True, pygame.Color('dark red'))
-
-        rules_prise = ['hp: +20%', 'damage: +20%', 'speed: +20%']
+        rules_prise = ['hp: +0%', 'damage: +0%', 'speed: +0%']
+        if level == 'hard':
+            rules_prise = ['hp: +20%', 'damage: +20%', 'speed: +20%']
+        if level == 'medium':
+            rules_prise = ['hp: +15%', 'damage: +15%', 'speed: +15%']
+        if level == 'eazy':
+            rules_prise = ['hp: +10%', 'damage: +10%', 'speed: +10%']
         font = pygame.font.Font(None, 50)
         text_coord = 400
         for line in rules_prise:
@@ -261,7 +265,6 @@ def Maze(screen):
             self.dx = width // 2 - (target.rect.x + target.rect.w // 2)
             self.dy = height // 2 - (target.rect.y + target.rect.h // 2)
 
-
     all_sprites = pygame.sprite.Group()
     tiles_group = pygame.sprite.Group()
     leave_sprite = pygame.sprite.Group()
@@ -269,7 +272,8 @@ def Maze(screen):
     player_group = pygame.sprite.Group()
     box_group = pygame.sprite.Group()
     camera = Camera()
-    player, level_x, level_y = generate_level(load_level('maze_hard.txt'))
+    level_txt = f"maze_{level}.txt"
+    player, level_x, level_y = generate_level(load_level(level_txt))
     running = True
     true_button = [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_DOWN, pygame.K_UP,
                    pygame.K_d, pygame.K_a, pygame.K_w, pygame.K_s]
@@ -325,15 +329,30 @@ def Maze(screen):
             cur = con.cursor()
             if prise == 'hp':
                 max_hp = cur.execute("SELECT max_hp FROM Person").fetchall()[0][0]
-                cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.2}""")
+                if level == 'hard':
+                    cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.2}""")
+                if level == 'medium':
+                    cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.15}""")
+                if level == 'eazy':
+                    cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.1}""")
                 con.commit()
             elif prise == 'damage':
                 damage = cur.execute("SELECT damage FROM Person").fetchall()[0][0]
-                cur.execute(f"""UPDATE Person SET damage = {damage * 1.2}""")
+                if level == 'hard':
+                    cur.execute(f"""UPDATE Person SET damage = {damage * 1.2}""")
+                if level == 'medium':
+                    cur.execute(f"""UPDATE Person SET damage = {damage * 1.15}""")
+                if level == 'eazy':
+                    cur.execute(f"""UPDATE Person SET damage = {damage * 1.1}""")
                 con.commit()
             elif prise == 'speed':
                 speed = cur.execute("SELECT step FROM Person").fetchall()[0][0]
-                cur.execute(f"""UPDATE Person SET step = {speed * 1.2}""")
+                if level == 'hard':
+                    cur.execute(f"""UPDATE Person SET step = {speed * 1.2}""")
+                if level == 'medium':
+                    cur.execute(f"""UPDATE Person SET step = {speed * 1.15}""")
+                if level == 'eazy':
+                    cur.execute(f"""UPDATE Person SET step = {speed * 1.1}""")
                 con.commit()
             running = False
             return True
