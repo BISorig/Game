@@ -4,7 +4,6 @@ import pygame
 import os
 import sys
 
-
 pygame.init()
 size = width, height = 1900, 1000
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
@@ -14,21 +13,18 @@ pygame.display.set_caption("HARD MAZE")
 def Maze(screen, level):
     STEP = 50
 
-
     def visibility():
         value_visibility = 25
         circle = pygame.Surface((1900, 1000), pygame.SRCALPHA)
         pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 300, 300)
         value_visibility = 250
-        pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 1500, 1200)
+        pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 1700, 1400)
         screen.blit(circle, (0, 0))
-
 
     def fon():
         bg = pygame.image.load('../textures/pol.jpg')
         bg = pygame.transform.scale(bg, (1900, 1000))
         screen.blit(bg, (0, 0))
-
 
     def load_image(name):
         fullname = os.path.join('../textures', name)
@@ -48,11 +44,9 @@ def Maze(screen, level):
 
     tile_width = tile_height = 200
 
-
     def terminate():
         pygame.quit()
         sys.exit()
-
 
     def you_really_want_leave():
         pygame.mouse.set_visible(True)
@@ -154,7 +148,8 @@ def Maze(screen, level):
                         prise = 'speed'
                         pygame.draw.rect(screen, (100, 100, 100), ((1326, 840), (260, 120)))
                     if 1400 < mouse[0] < 1750 and 500 < mouse[1] < 600:
-                        pygame.draw.rect(screen, pygame.Color('white'), ((1390, 490), (330, 110)), 5)
+                        pygame.draw.rect(screen, pygame.Color('white'), ((1390, 490), (330, 110)),
+                                         5)
                         if prise != '':
                             return prise
             pos_m = pygame.mouse.get_pos()
@@ -203,28 +198,37 @@ def Maze(screen, level):
         def __init__(self, pos_x, pos_y):
             super().__init__(player_group, all_sprites)
             size_person = (150, 100)
-            self.images = {"right": {'Idle': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"), size_person) for i in range(8)],
-                                     'Run': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"), size_person)
+            self.images = {"right": {'Idle': [pygame.transform.scale(
+                pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
+                size_person) for i in range(8)],
+                                     'Run': [pygame.transform.scale(pygame.image.load(
+                                         f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"),
+                                                                    size_person)
                                              for i in range(10)],
                                      'Death': [pygame.transform.scale(pygame.image.load(
-                                         f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"), size_person)
-                                               for i in range(10)]
+                                         f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"),
+                                         size_person)
+                                         for i in range(10)]
                                      },
 
                            "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(
-                               pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
+                               pygame.image.load(
+                                   f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
                                size_person), True, False)
-                                             for i in range(8)],
-                                    'Run': [pygame.transform.flip(pygame.transform.scale(
-                                        pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"),
-                                        size_person), True, False)
-                                            for i in range(10)],
-                                    'Death': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(
-                                        f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"), size_person),
-                                                                    True, False)
-                                              for i in range(10)]
+                               for i in range(8)],
+                               'Run': [pygame.transform.flip(pygame.transform.scale(
+                                   pygame.image.load(
+                                       f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"),
+                                   size_person), True, False)
+                                   for i in range(10)],
+                               'Death': [
+                                   pygame.transform.flip(pygame.transform.scale(pygame.image.load(
+                                       f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"),
+                                       size_person),
+                                       True, False)
+                                   for i in range(10)]
 
-                                    }
+                           }
                            }
             self.image = self.images['right']['Idle'][0]
             self.rect = self.image.get_rect()
