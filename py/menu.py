@@ -19,7 +19,7 @@ def terminate():
 
 def autors():
     font = pygame.font.Font(None, 25)
-    line = 'by Nikita Babashev and by Ilya Bikmaev'
+    line = 'by Nikita Babashev and Ilya Bikmaev'
     line_rendered = font.render(line, 1, pygame.Color('grey'))
     line_rect = line_rendered.get_rect()
     line_rect.top = 1050
@@ -117,6 +117,8 @@ pygame.display.set_caption("MENU")
 bg = pygame.image.load('../textures/fonmenuosn.png')
 bg = pygame.transform.scale(bg, (1920, 1080))
 screen.blit(bg, (0, 0))
+bg = pygame.image.load('../textures/namegame.png')
+screen.blit(bg, (0, 0))
 x1, y1 = 0, 150
 while x1 < 2000:
     pygame.draw.line(screen, pygame.Color('blue'), (x1, y1), (x1 + 100, y1 + 50), 5)
@@ -168,6 +170,8 @@ while running:
         pygame.display.set_caption("MENU")
         bg = pygame.image.load('../textures/fonmenuosn.png')
         bg = pygame.transform.scale(bg, (1920, 1080))
+        screen.blit(bg, (0, 0))
+        bg = pygame.image.load('../textures/namegame.png')
         screen.blit(bg, (0, 0))
         x1, y1 = 0, 150
         while x1 < 2000:
