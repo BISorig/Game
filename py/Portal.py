@@ -8,7 +8,7 @@ portal_group = pygame.sprite.Group()
 class Portal(pygame.sprite.Sprite):
     def __init__(self, x, y, player):
         super().__init__(portal_group)
-        self.images = [load_image(f'data\\GameMap\\map\\portal\\portal{i}.gif', (4, 2, 4)) for i in range(9)]
+        self.images = [load_image(f'data\\GameMap\\portal\\portal{i}.gif', (4, 2, 4)) for i in range(9)]
         for i in range(len(self.images)):
             self.images[i] = pygame.transform.scale(self.images[i], (self.images[i].get_width() // 2, self.images[i].get_height() // 2))
         self.image = self.images[0]
@@ -27,7 +27,7 @@ class Portal(pygame.sprite.Sprite):
         self.num_images += 1
         self.num_images %= 9
         self.image = self.images[self.num_images]
-        if pygame.sprite.collide_mask(self.player, self) and not self.button.done:
+        if pygame.sprite.spritecollideany(self.player, portal_group) and not self.button.done:
             self.button.draw_fl = 1
         else:
             self.button.draw_fl = 0

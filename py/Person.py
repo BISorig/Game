@@ -90,6 +90,7 @@ class Person(pygame.sprite.Sprite):
         self.fl_block = 0
         self.num_attack = 0
         self.damage = par_person['damage']
+        self.num_enem = 0
 
     def update(self, motion_keydown, mouse_down, screen):
 
@@ -190,8 +191,12 @@ class Person(pygame.sprite.Sprite):
             if self.num_images in [2, 3, 8, 9, 16, 17]:
                 if self.route == 'right':
                     self.rect.x += self.step
+                    if pygame.sprite.spritecollideany(self, v_let_sprites):
+                        self.rect.x -= self.step
                 else:
                     self.rect.x -= self.step
+                    if pygame.sprite.spritecollideany(self, v_let_sprites):
+                        self.rect.x += self.step
             if not self.attack_queue:
                 self.mode = 'Idle'
                 pygame.time.set_timer(self.event, 150)

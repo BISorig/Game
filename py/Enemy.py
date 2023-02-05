@@ -66,7 +66,7 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.y += self.step
 
     def update(self, player):
-        self.death()
+        self.death(player)
         if player.mode == 'Death' and self.mode != 'Death':
             self.mode = 'Idle'
             self.num_images %= self.params['idle_pict_num']
@@ -152,8 +152,9 @@ class Enemy(pygame.sprite.Sprite):
                     player.hp -= self.damage
                     player.hit(self)
 
-    def death(self):
+    def death(self, player):
         if self.hp <= 0 and self.mode != 'Death':
+            player.num_enem += 1
             self.mode = 'Death'
             self.num_images = 0
             pygame.time.set_timer(self.event, 300)

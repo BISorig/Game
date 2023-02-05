@@ -183,14 +183,12 @@ def Maze(screen):
             screen.blit(text_speed, (1336, 850))
             pygame.display.flip()
 
-
     def load_level(filename):
         filename = 'maps/' + filename
         with open(filename, 'r') as file:
             map_level = list(map(str.strip, file.readlines()))
         max_width = max(map(len, map_level))
         return list(map(lambda x: x.ljust(max_width, '.'), map_level))
-
 
     class Tile(pygame.sprite.Sprite):
         def __init__(self, tile_type, pos_x, pos_y):
@@ -204,7 +202,6 @@ def Maze(screen):
             self.image = tile_images[tile_type]
             self.rect = self.image.get_rect()
             self.rect = self.rect.move(tile_width * pos_x, tile_height * pos_y)
-
 
     class Player(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y):
@@ -241,7 +238,6 @@ def Maze(screen):
             self.mode = 'Idle'
             pygame.time.set_timer(self.event, 100)
             self.route = 'right'
-
 
     def generate_level(level):
         new_player, x, y = None, None, None

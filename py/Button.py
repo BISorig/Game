@@ -13,8 +13,6 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.num_images = 0
         self.event = pygame.USEREVENT + 20 + len(button_events)
-        pygame.time.set_timer(self.event, 500)
-        button_events.append(self.event)
         self.draw_fl = 0
         self.done = 0
 
