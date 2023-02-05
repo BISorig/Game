@@ -15,7 +15,7 @@ print(res2)
 
 
 class Map(pygame.sprite.Sprite):
-    def __init__(self, player, level):
+    def __init__(self, player, level, num_level):
         super().__init__(all_sprites)
 
         self.image = pygame.Surface(level['size'])
@@ -86,16 +86,18 @@ class Map(pygame.sprite.Sprite):
         self.image.blit(self.text_attack, (1476, 450))
 
         button_end = Button('E')
-        button_end.rect = button_end.rect.move(535 * 48 - 220, 520)
+        button_end.rect = button_end.rect.move(level['size'][0] - 220, 520)
 
-        images = [7, 9, 8]
-        rast = [(5000, 240, 1.5, True), (10000, -25, 1, False), (20000, 435, 2, False)]
-        for i in range(3):
-            house = pygame.image.load(f'data\\GameMap\\buildings\\House{images[i]}.png')
-            if rast[i][3]:
-                house = pygame.transform.flip(house, True, False)
-            house = pygame.transform.scale(house, (house.get_width() * rast[i][2], house.get_height() * rast[i][2]))
-            self.image.blit(house, rast[i][:2])
+
+        if num_level == 2:
+            images = [7, 9, 8]
+            rast = [(5000, 240, 1.5, True), (10000, -25, 1, False), (20000, 435, 2, False)]
+            for i in range(3):
+                house = pygame.image.load(f'data\\GameMap\\buildings\\House{images[i]}.png')
+                if rast[i][3]:
+                    house = pygame.transform.flip(house, True, False)
+                house = pygame.transform.scale(house, (house.get_width() * rast[i][2], house.get_height() * rast[i][2]))
+                self.image.blit(house, rast[i][:2])
 
     def get_tile_id(self, position):
         return self.map.tiledgidmap(self.map.get_tile_gid(*position, 0))

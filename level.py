@@ -44,7 +44,7 @@ class Level:
                             if Maze(screen):
                                 portal_group.sprites()[0].button.done = 1
                         elif player.rect.x > 1630 and player.num_enem == 1:
-                            if self.level < 2:
+                            if self.level < 3:
                                 cur.execute(f"""UPDATE Person SET level = {self.level + 1}""")
                                 con.commit()
                             self.run = False
