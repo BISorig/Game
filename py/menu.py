@@ -119,6 +119,9 @@ bg = pygame.transform.scale(bg, (1920, 1080))
 screen.blit(bg, (0, 0))
 bg = pygame.image.load('../textures/namegame.png')
 screen.blit(bg, (0, 0))
+bg = pygame.image.load('../textures/goose.png')
+bg = pygame.transform.scale(bg, (100, 50))
+screen.blit(bg, (300, 300))
 x1, y1 = 0, 150
 while x1 < 2000:
     pygame.draw.line(screen, pygame.Color('blue'), (x1, y1), (x1 + 100, y1 + 50), 5)
@@ -173,6 +176,9 @@ while running:
         screen.blit(bg, (0, 0))
         bg = pygame.image.load('../textures/namegame.png')
         screen.blit(bg, (0, 0))
+        bg = pygame.image.load('../textures/goose.png')
+        bg = pygame.transform.scale(bg, (100, 50))
+        screen.blit(bg, (300, 300))
         x1, y1 = 0, 150
         while x1 < 2000:
             pygame.draw.line(screen, pygame.Color('blue'), (x1, y1), (x1 + 100, y1 + 50), 5)
