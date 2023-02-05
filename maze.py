@@ -8,16 +8,12 @@ from py.Person import *
 
 pygame.init()
 size = width, height = 1900, 1000
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 pygame.display.set_caption("HARD MAZE")
-
-
 
 
 def Maze(screen):
     STEP = 50
-    run = 1
-    size = width, height = 1900, 1000
 
 
     def visibility():
@@ -44,15 +40,12 @@ def Maze(screen):
             image = pygame.transform.scale(image, (200, 200))
         return image
 
-
     tile_images = {
         'wall': load_image('wall.jpg'),
         'empty': load_image('pol.jpg'),
         'leave': load_image('door_leave.jpg'),
         'exit': load_image('door_exit.jpg')
     }
-
-    player_image = load_image('hero.png')
 
     tile_width = tile_height = 200
 
@@ -278,15 +271,12 @@ def Maze(screen):
     player_group = pygame.sprite.Group()
     box_group = pygame.sprite.Group()
     camera = Camera()
-    player = None
     player, level_x, level_y = generate_level(load_level('maze_hard.txt'))
     running = True
     true_button = [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_DOWN, pygame.K_UP,
                    pygame.K_d, pygame.K_a, pygame.K_w, pygame.K_s]
     check_button = []
-    copy_button = []
     while running:
-        print(player.rect)
         player.mode = 'Idle'
         player.route = 'right'
         for event in pygame.event.get():
@@ -357,5 +347,5 @@ def Maze(screen):
             camera.apply(sprite)
         tiles_group.draw(screen)
         player_group.draw(screen)
-        pygame.display.flip()
         visibility()
+        pygame.display.flip()
