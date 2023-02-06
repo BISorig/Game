@@ -1,5 +1,3 @@
-import sqlite3
-
 import pygame
 import os
 import sys
@@ -15,13 +13,12 @@ def Maze(screen, level, main_player):
         STEP = 25
     if level == 'medium':
         STEP = 50
+    circle = pygame.Surface((1920, 1080), pygame.SRCALPHA)
+    pygame.draw.circle(circle, (0, 0, 0, 250), (950, 500), 1700, 1400)
+    if level != 'eazy':
+        screen.blit(circle, (0, 0))
 
     def visibility():
-        value_visibility = 25
-        circle = pygame.Surface((1920, 1080), pygame.SRCALPHA)
-        pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 300, 300)
-        value_visibility = 250
-        pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 1700, 1400)
         screen.blit(circle, (0, 0))
 
     def fon():
