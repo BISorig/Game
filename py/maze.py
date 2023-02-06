@@ -5,17 +5,17 @@ import os
 import sys
 
 pygame.init()
-size = width, height = 1900, 1000
+size = width, height = 1920, 1080
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 pygame.display.set_caption("HARD MAZE")
 
 
 def Maze(screen, level):
-    STEP = 50
+    STEP = 25
 
     def visibility():
         value_visibility = 25
-        circle = pygame.Surface((1900, 1000), pygame.SRCALPHA)
+        circle = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 300, 300)
         value_visibility = 250
         pygame.draw.circle(circle, (0, 0, 0, value_visibility), (950, 500), 1700, 1400)
@@ -120,6 +120,7 @@ def Maze(screen, level):
         if level == 'eazy':
             rules_prise = ['hp: +10%', 'damage: +10%', 'speed: +10%']
         font = pygame.font.Font(None, 50)
+        pygame.draw.rect(screen, pygame.Color('black'), ((100, 440), (250, 230)))
         text_coord = 400
         for line in rules_prise:
             line_rendered = font.render(line, 1, pygame.Color("dark red"))
@@ -130,21 +131,25 @@ def Maze(screen, level):
             text_coord += line_rect.height
             screen.blit(line_rendered, line_rect)
         prise = ''
-
+        pygame.draw.rect(screen, (0, 0, 0, 2), ((302, 840), (120, 120)))
+        pygame.draw.rect(screen, (0, 0, 0, 2), ((714, 840), (350, 120)))
+        pygame.draw.rect(screen, (0, 0, 0, 2), ((1326, 840), (260, 120)))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     terminate()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse = pygame.mouse.get_pos()
-                    pygame.draw.rect(screen, (0, 0, 0), ((302, 840), (1588, 120)))
+                    pygame.draw.rect(screen, (0, 0, 0, 2), ((302, 840), (120, 120)))
+                    pygame.draw.rect(screen, (0, 0, 0, 2), ((714, 840), (350, 120)))
+                    pygame.draw.rect(screen, (0, 0, 0, 2), ((1326, 840), (260, 120)))
                     if 312 < mouse[0] < 412 and 850 < mouse[1] < 950:
                         prise = 'hp'
                         pygame.draw.rect(screen, (100, 100, 100), ((302, 840), (120, 120)))
                     if 724 < mouse[0] < 1024 and 850 < mouse[1] < 950:
                         prise = 'damage'
                         pygame.draw.rect(screen, (100, 100, 100), ((714, 840), (350, 120)))
-                    if 1336 < mouse[0] < 1586 and 850 < mouse[1] < 950:
+                    if 1336 < mouse[0] < 1585 and 850 < mouse[1] < 950:
                         prise = 'speed'
                         pygame.draw.rect(screen, (100, 100, 100), ((1326, 840), (260, 120)))
                     if 1400 < mouse[0] < 1750 and 500 < mouse[1] < 600:
@@ -165,9 +170,9 @@ def Maze(screen, level):
             else:
                 pygame.draw.rect(screen, pygame.Color('black'), ((1390, 490), (330, 110)))
                 text_okay = surf.render('confirm', True, pygame.Color('dark red'))
-                pygame.draw.rect(screen, pygame.Color('black'), ((302, 840), (120, 120)), 5)
-                pygame.draw.rect(screen, pygame.Color('black'), ((714, 840), (350, 120)), 5)
-                pygame.draw.rect(screen, pygame.Color('black'), ((1326, 840), (260, 120)), 5)
+                pygame.draw.rect(screen, (0, 0, 0, 2), ((302, 840), (120, 120)), 5)
+                pygame.draw.rect(screen, (0, 0, 0, 2), ((714, 840), (350, 120)), 5)
+                pygame.draw.rect(screen, (0, 0, 0, 2), ((1326, 840), (260, 120)), 5)
             screen.blit(text_okay, (1400, 500))
             screen.blit(text_hp, (312, 850))
             screen.blit(text_damage, (724, 850))
@@ -322,7 +327,10 @@ def Maze(screen, level):
             if you_really_want_leave():
                 pygame.mouse.set_visible(False)
                 print('продолжаем проходить лабиринт')
-                player.rect.y -= STEP
+                if level == 'hard' or level == 'medium':
+                    player.rect.y -= STEP
+                if level == 'eazy':
+                    player.rect.x += STEP
             else:
                 running = False
                 print('возвращаемся на основную карту')
@@ -368,5 +376,6 @@ def Maze(screen, level):
             camera.apply(sprite)
         tiles_group.draw(screen)
         player_group.draw(screen)
-        visibility()
+        if level != 'eazy':
+            visibility()
         pygame.display.flip()
