@@ -47,7 +47,8 @@ class Level:
                         self.motion_keydown.append(event.key)
                     elif event.key == 27:
                         screen.blit(self.pause_rect, (0, 0))
-                        self.pause()
+                        if self.pause():
+                            self.run = 0
                     elif event.key == pygame.K_e:
                         if portal_group.sprites()[0].button.draw_fl and not portal_group.sprites()[0].button.done:
                             if Maze(screen, self.maze):
@@ -110,8 +111,8 @@ class Level:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == 27 or event.key == pygame.K_n:
-                        return 1
-                    elif event.key == pygame.K_y:
                         return 0
+                    elif event.key == pygame.K_y:
+                        return 1
             pygame.display.flip()
 

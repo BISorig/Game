@@ -329,7 +329,7 @@ def Maze(screen, level):
                 return False
         if pygame.sprite.spritecollideany(player, exit_sprite):
             prise = you_passed_maze()
-            con = sqlite3.connect('../data/bd/parameters.db')
+            con = sqlite3.connect('data/bd/parameters.db')
             cur = con.cursor()
             if prise == 'hp':
                 max_hp = cur.execute("SELECT max_hp FROM Person").fetchall()[0][0]
