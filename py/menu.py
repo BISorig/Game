@@ -9,10 +9,12 @@ def Menu(screen, con, cur):
     music_on_off = False
     sound_on_off = False
     pygame.mouse.set_visible(True)
+    level = cur.execute("SELECT level FROM Person").fetchall()[0][0]
 
     def terminate():
         pygame.quit()
         sys.exit()
+
 
     def autors():
         font = pygame.font.Font(None, 25)
@@ -22,6 +24,8 @@ def Menu(screen, con, cur):
         line_rect.top = 1050
         line_rect.x = 10
         screen.blit(line_rendered, line_rect)
+
+
 
     def checkmusicsound(text, stage):
         font = pygame.font.Font(None, 50)
@@ -57,6 +61,7 @@ def Menu(screen, con, cur):
                 button_on_off = surf.render(text_button_on_off, True, pygame.Color('red'))
             screen.blit(button_on_off, (825, 375))
             pygame.display.flip()
+
 
     def yesorno(text, stage):
         font = pygame.font.Font(None, 50)
@@ -101,10 +106,12 @@ def Menu(screen, con, cur):
             screen.blit(button_no, (1100, 375))
             pygame.display.flip()
 
+
     def createtext(text, color, x, y):
         surf = pygame.font.SysFont('Corbel', 75)
         text_button = surf.render(text, True, pygame.Color(color))
         screen.blit(text_button, (x, y))
+
 
     pygame.display.set_caption("MENU")
     bg = pygame.image.load('textures/fonmenuosn.png')
@@ -129,9 +136,10 @@ def Menu(screen, con, cur):
                 terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos_m = pygame.mouse.get_pos()
-                print(pos_m)
                 if 605 < pos_m[0] < 720 and 670 < pos_m[1] < 705:
-                    pass  # запуск основной карты
+                    cur.execute("""UPDATE Person SET level = 1""")
+                    con.commit()
+                    return True
                 if 900 < pos_m[0] < 1000 and 920 < pos_m[1] < 955:
                     if yesorno('Вы действительно хотите выйти из игры?', 'exit'):
                         terminate()
@@ -139,7 +147,8 @@ def Menu(screen, con, cur):
                         screen.fill((0, 0, 0))
                         check_fill = True
                 if 1055 < pos_m[0] < 1305 and 670 < pos_m[1] < 705:
-                    pass  # продолжить сохранённую игру и проверить есть ли она
+                    if level:
+                        return True # продолжить сохранённую игру и проверить есть ли она
                 if 605 < pos_m[0] < 775 and 820 < pos_m[1] < 855:
                     if checkmusicsound('Звуки действий персонажа', 'sound'):
                         if sound_on_off:
@@ -185,15 +194,19 @@ def Menu(screen, con, cur):
         else:
             createtext('play', 'red', 600, 650)
         if 1055 < pos_m[0] < 1305 and 670 < pos_m[1] < 705:
+
+            if not level:
             # нужно проверить, есть ли сохранение (если его нет)
-            createtext('continue', 'light blue', 1050, 650)  # создаём кнопку для продолжения игры
-            # нужно проверить, есть ли сохранение (если оно есть)
-            # createtext('continue', 'blue', 1050, 650)
+                createtext('continue', 'light blue', 1050, 650)  # создаём кнопку для продолжения игры
+            else:
+                createtext('continue', 'blue', 1050, 650)
         else:
+            if not level:
             # нужно проверить, есть ли сохранение (если его нет)
-            createtext('continue', 'dark red', 1050, 650)
+                createtext('continue', 'dark red', 1050, 650)
             # нужно проверить, есть ли сохранение (если оно есть)
-            # createtext('continue', 'red', 1050, 650)
+            else:
+                createtext('continue', 'red', 1050, 650)
         if 605 < pos_m[0] < 775 and 820 < pos_m[1] < 855:
             createtext('sound', 'blue', 600, 800)  # создаём кнопку звуков атаки и т.п. вкл выкл
         else:

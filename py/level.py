@@ -13,8 +13,12 @@ size = w, h = 1920, 1080
 
 class Level:
 
-    def __init__(self, player, mp, level):
+    def __init__(self, player, mp, level, maze):
         pygame.mouse.set_visible(False)
+        self.maze = maze
+        self.pause_rect = pygame.Surface((1920, 1080))
+        self.pause_rect.fill('black')
+        self.pause_rect.set_alpha(100)
         self.map = mp
         self.level = level
         self.cmr = Camera(w, h)
@@ -34,15 +38,19 @@ class Level:
         while self.run:
             mouse_down = 0
             for event in pygame.event.get():
+                print(event)
                 if event.type == pygame.QUIT:
                     self.run = False
                 if event.type == pygame.KEYDOWN:
                     if event.key in WASD:
                         num_images = 1
                         self.motion_keydown.append(event.key)
+                    elif event.key == 27:
+                        screen.blit(self.pause_rect, (0, 0))
+                        self.pause()
                     elif event.key == pygame.K_e:
                         if portal_group.sprites()[0].button.draw_fl and not portal_group.sprites()[0].button.done:
-                            if Maze(screen):
+                            if Maze(screen, self.maze):
                                 portal_group.sprites()[0].button.done = 1
                         elif player.rect.x > 1630 and player.num_enem == 1:
                             if self.level < 3:
@@ -92,5 +100,18 @@ class Level:
             screen.blit(player.text, (100, 100))
 
             enemys_group.draw(screen)
+            pygame.display.flip()
+
+    def pause(self):
+        font = pygame.font.Font(None, 100)
+        text = font.render('Хотите выйти в меню? (y/n)', True, 'red')
+        screen.blit(text, (525, 540))
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == 27 or event.key == pygame.K_n:
+                        return 1
+                    elif event.key == pygame.K_y:
+                        return 0
             pygame.display.flip()
 

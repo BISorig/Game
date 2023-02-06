@@ -3,17 +3,18 @@ from py.Map import Map
 from py.Button import button_group
 from py.Portal import portal_group
 from py.Tile import all_sprites, v_let_sprites, h_let_sprites, map_sprite
+from py.Enemy import enemys_group
 from py.menu import *
 
 
 con = sqlite3.connect("data\\bd\\parameters.db")
 cur = con.cursor()
-level = cur.execute("""SELECT level FROM Person""").fetchall()[0][0]
 pygame.init()
 pygame.mouse.set_visible(True)
 size = w, h = 1920, 1080
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 while Menu(screen, con, cur):
+    level = cur.execute("""SELECT level FROM Person""").fetchall()[0][0]
     button_group.empty()
     portal_group.empty()
     all_sprites.empty()
@@ -21,6 +22,7 @@ while Menu(screen, con, cur):
     h_let_sprites.empty()
     map_sprite.empty()
     player_group.empty()
+    enemys_group.empty()
     player = Person(100, 100, 250, 165)
     if level == 1:
         level1 = {'size': (535 * 48, 1080), 'map': 'data\\GameMap\\map\\tiled\\Level_0.tmx',
@@ -29,7 +31,7 @@ while Menu(screen, con, cur):
                   'layer_enemy': 17, 'cnt_layers': 20, 'skeleton': 577, 'goblin': 576,
                   'huntress': 574, 'Martial Hero 3': 575}
         mp = Map(player, level1, level)
-        Level(player, mp, 1)
+        Level(player, mp, 1, 'eazy')
     level = cur.execute("""SELECT level FROM Person""").fetchall()[0][0]
     if level == 2:
         button_group.empty()

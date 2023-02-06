@@ -22,12 +22,12 @@ def Maze(screen, level):
         screen.blit(circle, (0, 0))
 
     def fon():
-        bg = pygame.image.load('../textures/pol.jpg')
+        bg = pygame.image.load('textures/pol.jpg')
         bg = pygame.transform.scale(bg, (1900, 1000))
         screen.blit(bg, (0, 0))
 
     def load_image(name):
-        fullname = os.path.join('../textures', name)
+        fullname = os.path.join('textures', name)
         image = pygame.image.load(fullname)
         if name == 'hero.png':
             image = pygame.transform.scale(image, (150, 100))
@@ -52,7 +52,7 @@ def Maze(screen, level):
         pygame.mouse.set_visible(True)
         rules = ['ВЫ ТОЧНО ХОТИТЕ ВЕРНУТЬСЯ', ' БЕЗ НАГРАДЫ?']
         font = pygame.font.Font(None, 50)
-        bg = pygame.image.load('../textures/true_leave.png')
+        bg = pygame.image.load('textures/true_leave.png')
         bg = pygame.transform.scale(bg, (1000, 200))
         screen.blit(bg, (450, 0))
         text_coord = 50
@@ -95,7 +95,7 @@ def Maze(screen, level):
         pygame.mouse.set_visible(True)
         rules = ['ВЫ ПРОШЛИ ЛАБИРИНТ,', 'МОЖЕТЕ ВЫБРАТЬ ОДНУ ИЗ НАГРАД']
         font = pygame.font.Font(None, 50)
-        bg = pygame.image.load('../textures/true_leave.png')
+        bg = pygame.image.load('textures/true_leave.png')
         bg = pygame.transform.scale(bg, (1000, 200))
         screen.blit(bg, (450, 0))
         text_coord = 50
