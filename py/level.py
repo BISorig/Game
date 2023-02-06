@@ -86,7 +86,6 @@ class Level:
             player.update(self.motion_keydown, mouse_down, screen)
             if player.mode == 'Death' and player.num_images == 9:
                 self.run = 0
-
             enemys_group.update(player)
             screen.fill('black')
             all_sprites.draw(screen)

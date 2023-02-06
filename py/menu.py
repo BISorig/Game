@@ -33,7 +33,7 @@ def Menu(screen, con, cur):
             line_rect.x = 725
         if stage == 'music':
             line_rect.x = 875
-        bg = pygame.image.load('textures/fonmenu.jpg')
+        bg = pygame.image.load('data/textures/fonmenu.jpg')
         bg = pygame.transform.scale(bg, (800, 300))
         screen.blit(bg, (560, 240))
         screen.blit(line_rendered, line_rect)
@@ -69,7 +69,7 @@ def Menu(screen, con, cur):
             text_button_yes = 'yes'
             text_button_no = 'no'
             line_rect.x = 600
-        bg = pygame.image.load('textures/fonmenu.jpg')
+        bg = pygame.image.load('data/textures/fonmenu.jpg')
         bg = pygame.transform.scale(bg, (800, 300))
         screen.blit(bg, (560, 240))
         screen.blit(line_rendered, line_rect)
@@ -105,10 +105,13 @@ def Menu(screen, con, cur):
         screen.blit(text_button, (x, y))
 
     pygame.display.set_caption("MENU")
-    bg = pygame.image.load('textures/fonmenuosn.png')
+    bg = pygame.image.load('data/textures/fonmenuosn.png')
     bg = pygame.transform.scale(bg, (1920, 1080))
     screen.blit(bg, (0, 0))
-    bg = pygame.image.load('textures/namegame.png')
+    bg = pygame.image.load('data/GameMap/buildings/House11.png')
+    bg = pygame.transform.scale(bg, (bg.get_width() * 0.3, bg.get_height() * 0.3))
+    screen.blit(bg, (1420, 540))
+    bg = pygame.image.load('data/textures/namegame.png')
     screen.blit(bg, (-30, 0))
     bg = pygame.image.load('data/GameMap/goose/Goose.png')
     kr = load_image('data/GameMap/goose/krest.png', 'white')
@@ -116,7 +119,7 @@ def Menu(screen, con, cur):
     bg = pygame.transform.scale(bg, (100, 100))
     screen.blit(bg, (1400, 30))
     screen.blit(kr, (1400, 30))
-    bg = pygame.image.load('textures/goose.png')
+    bg = pygame.image.load('data/textures/goose.png')
     bg = pygame.transform.scale(bg, (100, 50))
     screen.blit(bg, (300, 300))
     x1, y1 = 0, 150
@@ -171,10 +174,13 @@ def Menu(screen, con, cur):
         pos_m = pygame.mouse.get_pos()
         if check_fill:
             pygame.display.set_caption("MENU")
-            bg = pygame.image.load('textures/fonmenuosn.png')
+            bg = pygame.image.load('data/textures/fonmenuosn.png')
             bg = pygame.transform.scale(bg, (1920, 1080))
             screen.blit(bg, (0, 0))
-            bg = pygame.image.load('textures/namegame.png')
+            bg = pygame.image.load('data/GameMap/buildings/House11.png')
+            bg = pygame.transform.scale(bg, (bg.get_width() * 0.3, bg.get_height() * 0.3))
+            screen.blit(bg, (1420, 540))
+            bg = pygame.image.load('data/textures/namegame.png')
             screen.blit(bg, (-30, 0))
             bg = pygame.image.load('data/GameMap/goose/Goose.png')
             kr = load_image('data/GameMap/goose/krest.png', 'white')
@@ -182,7 +188,7 @@ def Menu(screen, con, cur):
             bg = pygame.transform.scale(bg, (100, 100))
             screen.blit(bg, (1400, 30))
             screen.blit(kr, (1400, 30))
-            bg = pygame.image.load('textures/goose.png')
+            bg = pygame.image.load('data/textures/goose.png')
             bg = pygame.transform.scale(bg, (100, 50))
             screen.blit(bg, (300, 300))
             x1, y1 = 0, 150
@@ -193,10 +199,10 @@ def Menu(screen, con, cur):
                 x1 += 200
             autors()
             check_fill = False
-        if 605 < pos_m[0] < 720 and 670 < pos_m[1] < 705:
-            createtext('play', 'blue', 600, 650)  # создаём кнопку для начала игры
+        if 605 < pos_m[0] < 910 and 670 < pos_m[1] < 705:
+            createtext('new game', 'blue', 600, 650)  # создаём кнопку для начала игры
         else:
-            createtext('play', 'red', 600, 650)
+            createtext('new game', 'red', 600, 650)
         if 1055 < pos_m[0] < 1305 and 670 < pos_m[1] < 705:
 
             if not level:
