@@ -48,7 +48,6 @@ while Menu(screen, con, cur):
     par_person = {}
     for i in range(len(res_person)):
         par_person[res_person[i][1]] = res2_person[0][i]
-    player = Person(100, 100, 250, 165, par_person)
     if level == 2:
         button_group.empty()
         portal_group.empty()
@@ -58,8 +57,7 @@ while Menu(screen, con, cur):
         map_sprite.empty()
         player_group.empty()
         enemys_group.empty()
-        player.rect.x = 100
-        player.rect.y = 100
+        player = Person(100, 100, 250, 165, par_person)
         level2 = {'size': (445 * 48, 1080), 'map': 'data\\GameMap\\map2\\tiled\\Level_0.tmx',
                   'sky': 'data\\GameMap\\background\\Sky3.png', 'sky_size': 1024,
                   'layer_draw': (2, 8, 3),
@@ -77,7 +75,6 @@ while Menu(screen, con, cur):
     par_person = {}
     for i in range(len(res_person)):
         par_person[res_person[i][1]] = res2_person[0][i]
-    player = Person(100, 100, 250, 165, par_person)
     level = cur.execute("""SELECT level FROM Person""").fetchall()[0][0]
     if level == 3:
         button_group.empty()
@@ -88,8 +85,7 @@ while Menu(screen, con, cur):
         map_sprite.empty()
         player_group.empty()
         enemys_group.empty()
-        player.rect.x = 100
-        player.rect.y = 100
+        player = Person(100, 100, 250, 165, par_person)
         level3 = {'size': (445 * 48, 1080), 'map': 'data\\GameMap\\map3\\tiled\\Level_0.tmx',
                   'sky': 'data\\GameMap\\background\\Sky3.png', 'sky_size': 1024,
                   'layer_draw': (2, 8, 3),
