@@ -200,14 +200,12 @@ def Menu(screen, con, cur):
         if 1055 < pos_m[0] < 1305 and 670 < pos_m[1] < 705:
 
             if not level:
-            # нужно проверить, есть ли сохранение (если его нет)
                 createtext('continue', 'light blue', 1050, 650)  # создаём кнопку для
             # продолжения игры
             else:
                 createtext('continue', 'blue', 1050, 650)
         else:
             if not level:
-            # нужно проверить, есть ли сохранение (если его нет)
                 createtext('continue', 'dark red', 1050, 650)
             # нужно проверить, есть ли сохранение (если оно есть)
             else:
