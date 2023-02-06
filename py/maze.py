@@ -10,7 +10,7 @@ screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 pygame.display.set_caption("HARD MAZE")
 
 
-def Maze(screen, level):
+def Maze(screen, level, main_player):
     STEP = 25
 
     def visibility():
@@ -204,31 +204,37 @@ def Maze(screen, level):
             super().__init__(player_group, all_sprites)
             size_person = (150, 100)
             self.images = {"right": {'Idle': [pygame.transform.scale(
-                pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
+                pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                  f"HeroKnight\\Idle\\Idle{i}.png"),
                 size_person) for i in range(8)],
                                      'Run': [pygame.transform.scale(pygame.image.load(
-                                         f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"),
+                                         f"data\\Hero Knight\\Sprites\\"
+                                         f"HeroKnight\\Run\\Run{i}.png"),
                                                                     size_person)
                                              for i in range(10)],
                                      'Death': [pygame.transform.scale(pygame.image.load(
-                                         f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"),
+                                         f"data\\Hero Knight\\Sprites\\"
+                                         f"HeroKnight\\Death\\Death{i}.png"),
                                          size_person)
                                          for i in range(10)]
                                      },
 
                            "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(
                                pygame.image.load(
-                                   f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
+                                   f"data\\Hero Knight\\Sprites\\"
+                                   f"HeroKnight\\Idle\\Idle{i}.png"),
                                size_person), True, False)
                                for i in range(8)],
                                'Run': [pygame.transform.flip(pygame.transform.scale(
                                    pygame.image.load(
-                                       f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"),
+                                       f"data\\Hero Knight\\Sprites\\"
+                                       f"HeroKnight\\Run\\Run{i}.png"),
                                    size_person), True, False)
                                    for i in range(10)],
                                'Death': [
                                    pygame.transform.flip(pygame.transform.scale(pygame.image.load(
-                                       f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"),
+                                       f"data\\Hero Knight\\Sprites\\"
+                                       f"HeroKnight\\Death\\Death{i}.png"),
                                        size_person),
                                        True, False)
                                    for i in range(10)]
@@ -326,46 +332,36 @@ def Maze(screen, level):
             check_button = []
             if you_really_want_leave():
                 pygame.mouse.set_visible(False)
-                print('продолжаем проходить лабиринт')
                 if level == 'hard' or level == 'medium':
                     player.rect.y -= STEP
                 if level == 'eazy':
                     player.rect.x += STEP
             else:
                 running = False
-                print('возвращаемся на основную карту')
                 return False
         if pygame.sprite.spritecollideany(player, exit_sprite):
             prise = you_passed_maze()
-            con = sqlite3.connect('data/bd/parameters.db')
-            cur = con.cursor()
             if prise == 'hp':
-                max_hp = cur.execute("SELECT max_hp FROM Person").fetchall()[0][0]
                 if level == 'hard':
-                    cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.2}""")
+                    main_player.max_hp *= 1.2
                 if level == 'medium':
-                    cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.15}""")
+                    main_player.max_hp *= 1.15
                 if level == 'eazy':
-                    cur.execute(f"""UPDATE Person SET max_hp = {max_hp * 1.1}""")
-                con.commit()
+                    main_player.max_hp *= 1.1
             elif prise == 'damage':
-                damage = cur.execute("SELECT damage FROM Person").fetchall()[0][0]
                 if level == 'hard':
-                    cur.execute(f"""UPDATE Person SET damage = {damage * 1.2}""")
+                    main_player.damage *= 1.2
                 if level == 'medium':
-                    cur.execute(f"""UPDATE Person SET damage = {damage * 1.15}""")
+                    main_player.damage *= 1.15
                 if level == 'eazy':
-                    cur.execute(f"""UPDATE Person SET damage = {damage * 1.1}""")
-                con.commit()
+                    main_player.damage *= 1.1
             elif prise == 'speed':
-                speed = cur.execute("SELECT step FROM Person").fetchall()[0][0]
                 if level == 'hard':
-                    cur.execute(f"""UPDATE Person SET step = {speed * 1.2}""")
+                    main_player.step *= 1.2
                 if level == 'medium':
-                    cur.execute(f"""UPDATE Person SET step = {speed * 1.15}""")
+                    main_player.step *= 1.15
                 if level == 'eazy':
-                    cur.execute(f"""UPDATE Person SET step = {speed * 1.1}""")
-                con.commit()
+                    main_player.step *= 1.1
             running = False
             return True
 

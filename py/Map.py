@@ -2,7 +2,6 @@ import pytmx
 from py.Tile import Tile
 from py.Person import all_sprites
 from py.Enemy import *
-import pygame
 import sqlite3
 from py.Portal import  *
 
@@ -11,13 +10,15 @@ con = sqlite3.connect("data\\bd\\parameters.db")
 cur = con.cursor()
 res = cur.execute("""PRAGMA table_info(Enemys)""").fetchall()
 res2 = cur.execute("""SELECT * FROM Enemys""").fetchall()
-print(res2)
 
 
 class Map(pygame.sprite.Sprite):
     def __init__(self, player, level, num_level):
         super().__init__(all_sprites)
-        self.dict_enemys = {level['goblin']: 2, level['skeleton']: 9, level['huntress']: 4, level['Martial Hero 3']: 7}
+        self.dict_enemys = {level['Goblin']: 2, level['Skeleton']: 9, level['Huntress']: 4,
+                            level['Martial Hero 3']: 7, level['Wizard']: 10,
+                            level['Martial Hero']: 6, level['King']: 8, level['Light Bandit']: 5,
+                            level['Heavy Bandit']: 3, level['Fantasy Warrior']: 1}
         self.image = pygame.Surface(level['size'])
         self.map = pytmx.load_pygame(level['map'])
         sky = pygame.image.load(level['sky'])
@@ -43,7 +44,7 @@ class Map(pygame.sprite.Sprite):
                         elif i == level['layer_v']:
                             Tile(image, x - 1, y - 1, 'v_let')
                         elif i == level['layer_enemy']:
-                            print(gid)
+                            player.num_enem += 1
                             par = {}
                             enemy = self.dict_enemys[gid]
                             for j in range(16):

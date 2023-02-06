@@ -1,96 +1,147 @@
 import pygame.sprite
-import sqlite3
 from py.load_image import *
-from py.Tile import all_sprites, let_sprites, h_let_sprites, v_let_sprites
+from py.Tile import all_sprites, h_let_sprites, v_let_sprites
 player_group = pygame.sprite.Group()
-
-con = sqlite3.connect("data\\bd\\parameters.db")
-cur = con.cursor()
-res_person = cur.execute("""PRAGMA table_info(Person)""").fetchall()
-res2_person = cur.execute("""SELECT * FROM Person""").fetchall()
-par_person = {}
-for i in range(len(res_person)):
-    par_person[res_person[i][1]] = res2_person[0][i]
 
 
 class Person(pygame.sprite.Sprite):
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, par_person):
         super().__init__(player_group, all_sprites)
         size_person = (w, h)
-        self.images = {"right": {'Idle': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"), size_person)
-                                           for i in range(8)],
-                                 'Run': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"), size_person)
-                                         for i in range(10)],
-                                 'Jump': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Jump\\Jump{i}.png"), size_person)
-                                          for i in range(3)],
-                                 'Attack': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Attack1\\Attack{i}.png"), size_person)
-                                            for i in range(20)],
-                                 'Roll': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Roll\\Roll{i}.png"), size_person)
-                                            for i in range(9)],
-                                 'BlockIdle': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\BlockIdle\\BlockIdle{i}.png"), size_person)
-                                            for i in range(8)],
-                                 'Hit': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Hit\\Hit{i}.png"), size_person)
-                                         for i in range(3)],
-                                 'Death': [pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"),size_person)
-                                           for i in range(10)]
+        self.images = {"right": {'Idle': [pygame.transform.scale(
+            pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"),
+            size_person)
+            for i in range(8)],
+                                 'Run': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\Run\\Run{i}.png"),
+                                     size_person)
+                                     for i in range(10)],
+                                 'Jump': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\Jump\\Jump{i}.png"),
+                                     size_person)
+                                     for i in range(3)],
+                                 'Attack': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\Attack1\\Attack{i}.png"),
+                                     size_person)
+                                     for i in range(20)],
+                                 'Roll': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\Roll\\Roll{i}.png"),
+                                     size_person)
+                                     for i in range(9)],
+                                 'BlockIdle': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\BlockIdle\\BlockIdle{i}.png"),
+                                     size_person)
+                                     for i in range(8)],
+                                 'Hit': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\Hit\\Hit{i}.png"),
+                                     size_person)
+                                     for i in range(3)],
+                                 'Death': [pygame.transform.scale(
+                                     pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                       f"HeroKnight\\Death\\Death{i}.png"),
+                                     size_person)
+                                     for i in range(10)]
                                  },
 
 
-                       "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Idle\\Idle{i}.png"), size_person), True, False)
-                                         for i in range(8)],
-                                'Run': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Run\\Run{i}.png"), size_person), True, False)
-                                        for i in range(10)],
-                                'Jump': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Jump\\Jump{i}.png"), size_person), True, False)
-                                         for i in range(3)],
-                                'Attack': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Attack1\\Attack{i}.png"), size_person), True, False)
-                                           for i in range(20)],
-                                'Roll': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Roll\\Roll{i}.png"), size_person), True, False)
-                                         for i in range(9)],
-                                'BlockIdle': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\BlockIdle\\BlockIdle{i}.png"), size_person), True, False)
-                                          for i in range(8)],
-                                'Hit': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Hit\\Hit{i}.png"),size_person), True, False)
-                                              for i in range(3)],
-                                'Death': [pygame.transform.flip(pygame.transform.scale(pygame.image.load(f"data\\Hero Knight\\Sprites\\HeroKnight\\Death\\Death{i}.png"),size_person), True, False)
-                                        for i in range(10)]
+                       "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(
+                           pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                             f"HeroKnight\\Idle\\Idle{i}.png"),
+                           size_person), True, False)
+                           for i in range(8)],
+                                'Run': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\Run\\Run{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(10)],
+                                'Jump': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\Jump\\Jump{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(3)],
+                                'Attack': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\Attack1\\Attack{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(20)],
+                                'Roll': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\Roll\\Roll{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(9)],
+                                'BlockIdle': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\BlockIdle\\BlockIdle{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(8)],
+                                'Hit': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\Hit\\Hit{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(3)],
+                                'Death': [pygame.transform.flip(pygame.transform.scale(
+                                    pygame.image.load(f"data\\Hero Knight\\Sprites\\"
+                                                      f"HeroKnight\\Death\\Death{i}.png"),
+                                    size_person), True, False)
+                                    for i in range(10)]
 
                                 },
                        }
-        self.masks = {"right": {"Idle": [pygame.mask.from_surface(self.images["right"]["Idle"][i]) for i in range(8)],
-                                "Run": [pygame.mask.from_surface(self.images["right"]["Run"][i]) for i in range(10)],
-                                "Jump": [pygame.mask.from_surface(self.images["right"]["Jump"][i]) for i in range(3)],
-                                "Attack": [pygame.mask.from_surface(self.images["right"]["Attack"][i]) for i in range(20)],
-                                "BlockIdle": [pygame.mask.from_surface(self.images["right"]["BlockIdle"][i]) for i in range(8)],
-                                "Roll": [pygame.mask.from_surface(self.images["right"]["Roll"][i]) for i in range(9)],
-                                "Hit": [pygame.mask.from_surface(self.images["right"]["Hit"][i]) for i in range(3)]},
+        self.masks = {"right": {"Idle": [pygame.mask.from_surface(
+            self.images["right"]["Idle"][i]) for i in range(8)],
+                                "Run": [pygame.mask.from_surface(
+                                    self.images["right"]["Run"][i]) for i in range(10)],
+                                "Jump": [pygame.mask.from_surface(
+                                    self.images["right"]["Jump"][i]) for i in range(3)],
+                                "Attack": [pygame.mask.from_surface(
+                                    self.images["right"]["Attack"][i]) for i in range(20)],
+                                "BlockIdle": [pygame.mask.from_surface(
+                                    self.images["right"]["BlockIdle"][i]) for i in range(8)],
+                                "Roll": [pygame.mask.from_surface(
+                                    self.images["right"]["Roll"][i]) for i in range(9)],
+                                "Hit": [pygame.mask.from_surface(
+                                    self.images["right"]["Hit"][i]) for i in range(3)]},
 
-                      "left": {"Idle": [pygame.mask.from_surface(self.images["left"]["Idle"][i]) for i in range(8)],
-                               "Run": [pygame.mask.from_surface(self.images["left"]["Run"][i]) for i in range(10)],
-                               "Jump": [pygame.mask.from_surface(self.images["left"]["Jump"][i]) for i in range(3)],
-                               "Roll": [pygame.mask.from_surface(self.images["left"]["Roll"][i]) for i in range(9)],
-                               "BlockIdle": [pygame.mask.from_surface(self.images["left"]["BlockIdle"][i]) for i in range(8)],
-                               "Attack": [pygame.mask.from_surface(self.images["left"]["Attack"][i]) for i in range(20)],
-                               "Hit": [pygame.mask.from_surface(self.images["left"]["Hit"][i]) for i in range(3)]
+                      "left": {"Idle": [pygame.mask.from_surface(
+                          self.images["left"]["Idle"][i]) for i in range(8)],
+                               "Run": [pygame.mask.from_surface(
+                                   self.images["left"]["Run"][i]) for i in range(10)],
+                               "Jump": [pygame.mask.from_surface(
+                                   self.images["left"]["Jump"][i]) for i in range(3)],
+                               "Roll": [pygame.mask.from_surface(
+                                   self.images["left"]["Roll"][i]) for i in range(9)],
+                               "BlockIdle": [pygame.mask.from_surface(
+                                   self.images["left"]["BlockIdle"][i]) for i in range(8)],
+                               "Attack": [pygame.mask.from_surface(
+                                   self.images["left"]["Attack"][i]) for i in range(20)],
+                               "Hit": [pygame.mask.from_surface(
+                                   self.images["left"]["Hit"][i]) for i in range(3)]
                                }}
         self.image = self.images['right']['Idle'][0]
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(875, 450)
-        print(x, y, self.rect)
         self.route = 'right'
         self.num_images = 0
         self.step = par_person['step']
         self.mode = "Idle"
         self.jump_m = -1
-        self.jump = 500
-        self.jump_h = 5
         self.pr_mode = "Idle"
         self.attack_queue = 0
-        self.hp = 9999999999999999999
+        self.hp = par_person['hp']
+        self.max_hp = par_person['max_hp']
         self.event = pygame.USEREVENT + 1
         pygame.time.set_timer(self.event, 100)
         self.fl_block = 0
         self.num_attack = 0
         self.damage = par_person['damage']
         self.num_enem = 0
+        self.jump_h = 5
 
     def update(self, motion_keydown, mouse_down, screen):
 
@@ -107,6 +158,8 @@ class Person(pygame.sprite.Sprite):
             self.mask = self.masks[self.route][self.mode][self.num_images]
         if self.mode == 'Death' and self.num_images == 9:
             pygame.time.set_timer(self.event, 0)
+        if self.mode == 'Jump':
+            self.num_images %= 2
         self.image = self.images[self.route][self.mode][self.num_images]
 
     def motion(self, keydown):
@@ -123,7 +176,9 @@ class Person(pygame.sprite.Sprite):
                 self.rect.x -= self.step
                 if pygame.sprite.spritecollideany(self, v_let_sprites):
                     self.rect.x += self.step
-        if (not keydown or keydown[:2] in [[pygame.K_d, pygame.K_a], [pygame.K_a, pygame.K_d]]) and self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
+        if (not keydown or keydown[:2] in [[pygame.K_d, pygame.K_a],
+                                           [pygame.K_a, pygame.K_d]]) and \
+                self.mode not in ['Attack', 'Roll', 'BlockIdle', 'Hit']:
             self.mode = "Idle"
             self.num_images %= 8
         if keydown[:2] not in [[pygame.K_d, pygame.K_a], [pygame.K_a, pygame.K_d]]:
@@ -160,7 +215,6 @@ class Person(pygame.sprite.Sprite):
             self.rect.y += self.jump_h
         elif pygame.sprite.spritecollideany(self, h_let_sprites) and self.mode == 'Jump':
             self.mode = self.pr_mode
-
 
     def attack(self, mouse_down):
         if mouse_down == 1 and self.mode not in ['Hit', 'BlockIdle']:
@@ -212,6 +266,7 @@ class Person(pygame.sprite.Sprite):
 
     def death(self):
         if self.hp <= 0 and self.mode != 'Death':
+            self.hp = 0
             self.mode = 'Death'
             self.num_images = 0
             pygame.time.set_timer(self.event, 300)

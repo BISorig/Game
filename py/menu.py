@@ -1,8 +1,6 @@
-import sqlite3
-
 import pygame
-import os
 import sys
+from py.load_image import load_image
 
 
 def Menu(screen, con, cur):
@@ -15,7 +13,6 @@ def Menu(screen, con, cur):
         pygame.quit()
         sys.exit()
 
-
     def autors():
         font = pygame.font.Font(None, 25)
         line = 'by Nikita Babashev and Ilya Bikmaev'
@@ -24,8 +21,6 @@ def Menu(screen, con, cur):
         line_rect.top = 1050
         line_rect.x = 10
         screen.blit(line_rendered, line_rect)
-
-
 
     def checkmusicsound(text, stage):
         font = pygame.font.Font(None, 50)
@@ -62,7 +57,6 @@ def Menu(screen, con, cur):
             screen.blit(button_on_off, (825, 375))
             pygame.display.flip()
 
-
     def yesorno(text, stage):
         font = pygame.font.Font(None, 50)
         line = text
@@ -94,7 +88,6 @@ def Menu(screen, con, cur):
                     if 1105 < mouse[0] < 1200 and 400 < mouse[1] < 450:
                         return False
             pos_m = pygame.mouse.get_pos()
-            print(pos_m)
             if 400 < pos_m[0] < 825 and 400 < pos_m[1] < 450:
                 button_yes = surf.render(text_button_yes, True, pygame.Color('light green'))
             elif 1105 < pos_m[0] < 1200 and 400 < pos_m[1] < 450:
@@ -106,19 +99,27 @@ def Menu(screen, con, cur):
             screen.blit(button_no, (1100, 375))
             pygame.display.flip()
 
-
     def createtext(text, color, x, y):
         surf = pygame.font.SysFont('Corbel', 75)
         text_button = surf.render(text, True, pygame.Color(color))
         screen.blit(text_button, (x, y))
-
 
     pygame.display.set_caption("MENU")
     bg = pygame.image.load('textures/fonmenuosn.png')
     bg = pygame.transform.scale(bg, (1920, 1080))
     screen.blit(bg, (0, 0))
     bg = pygame.image.load('textures/namegame.png')
-    screen.blit(bg, (0, 0))
+    screen.blit(bg, (-30, 0))
+    bg = pygame.image.load('data/GameMap/goose/Goose.png')
+    kr = load_image('data/GameMap/goose/krest.png', 'white')
+    kr = pygame.transform.scale(kr, (100, 100))
+    bg = pygame.transform.scale(bg, (100, 100))
+    screen.blit(bg, (1400, 30))
+    screen.blit(kr, (1400, 30))
+    # bg = pygame.transform.scale(bg, (400, 400))
+    # screen.blit(bg, (750, 230))
+    # kr = pygame.transform.scale(kr, (400, 400))
+    # screen.blit(kr, (740, 230))
     bg = pygame.image.load('textures/goose.png')
     bg = pygame.transform.scale(bg, (100, 50))
     screen.blit(bg, (300, 300))
@@ -139,6 +140,12 @@ def Menu(screen, con, cur):
                 if 605 < pos_m[0] < 720 and 670 < pos_m[1] < 705:
                     cur.execute("""UPDATE Person SET level = 1""")
                     con.commit()
+                    cur.execute(f"""UPDATE Person SET step = {5}""")
+                    con.commit()
+                    cur.execute(f"""UPDATE Person SET max_hp = {100}""")
+                    con.commit()
+                    cur.execute(f"""UPDATE Person SET damage = {5}""")
+                    con.commit()
                     return True
                 if 900 < pos_m[0] < 1000 and 920 < pos_m[1] < 955:
                     if yesorno('Вы действительно хотите выйти из игры?', 'exit'):
@@ -153,24 +160,19 @@ def Menu(screen, con, cur):
                     if checkmusicsound('Звуки действий персонажа', 'sound'):
                         if sound_on_off:
                             sound_on_off = False
-                            print('звуки выключены')
                         else:
                             sound_on_off = True
-                            print('звуки включены')
                         screen.fill((0, 0, 0))
                         check_fill = True
                 if 1050 < pos_m[0] < 1220 and 820 < pos_m[1] < 855:
                     if checkmusicsound('Музыка', 'music'):
                         if music_on_off:
                             music_on_off = False
-                            print('музыка выключена')
                         else:
                             music_on_off = True
-                            print('музыка включена')
                         screen.fill((0, 0, 0))
                         check_fill = True
         pos_m = pygame.mouse.get_pos()
-        print(pos_m)
         if check_fill:
             pygame.display.set_caption("MENU")
             bg = pygame.image.load('textures/fonmenuosn.png')
@@ -197,7 +199,8 @@ def Menu(screen, con, cur):
 
             if not level:
             # нужно проверить, есть ли сохранение (если его нет)
-                createtext('continue', 'light blue', 1050, 650)  # создаём кнопку для продолжения игры
+                createtext('continue', 'light blue', 1050, 650)  # создаём кнопку для
+            # продолжения игры
             else:
                 createtext('continue', 'blue', 1050, 650)
         else:
@@ -208,7 +211,8 @@ def Menu(screen, con, cur):
             else:
                 createtext('continue', 'red', 1050, 650)
         if 605 < pos_m[0] < 775 and 820 < pos_m[1] < 855:
-            createtext('sound', 'blue', 600, 800)  # создаём кнопку звуков атаки и т.п. вкл выкл
+            createtext('sound', 'blue', 600, 800)  # создаём кнопку звуков атаки и т.п.
+            # вкл выкл
         else:
             createtext('sound', 'red', 600, 800)
         if 1050 < pos_m[0] < 1220 and 820 < pos_m[1] < 855:

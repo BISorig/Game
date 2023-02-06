@@ -1,10 +1,8 @@
-import pygame
-
 from py.Person import *
 from py.Camera import *
 from py.Map import *
 from py.Portal import portal_group
-from py.Button import button_group, button_events
+from py.Button import button_group
 from py.maze import *
 
 WASD = [pygame.K_d, pygame.K_a, 1073742049]
@@ -21,7 +19,7 @@ class Level:
         self.pause_rect.set_alpha(100)
         self.map = mp
         self.level = level
-        self.cmr = Camera(w, h)
+        self.cmr = Camera(w)
         self.run = 1
         self.motion_keydown = []
         self.attack_keydown = []
@@ -38,7 +36,6 @@ class Level:
         while self.run:
             mouse_down = 0
             for event in pygame.event.get():
-                print(event)
                 if event.type == pygame.QUIT:
                     self.run = False
                 if event.type == pygame.KEYDOWN:
@@ -50,14 +47,21 @@ class Level:
                         if self.pause():
                             self.run = 0
                     elif event.key == pygame.K_e:
-                        if portal_group.sprites()[0].button.draw_fl and not portal_group.sprites()[0].button.done:
-                            if Maze(screen, self.maze):
+                        if portal_group.sprites()[0].button.draw_fl and \
+                                not portal_group.sprites()[0].button.done:
+                            if Maze(screen, self.maze, player):
                                 portal_group.sprites()[0].button.done = 1
-                        elif player.rect.x > 1630 and player.num_enem == 1:
+                                player.max_hp = int(player.max_hp)
+                        elif player.rect.x > 1630 and player.num_enem == 0:
                             if self.level < 3:
                                 cur.execute(f"""UPDATE Person SET level = {self.level + 1}""")
                                 con.commit()
-                            self.run = False
+                            cur.execute(f"""UPDATE Person SET step = {int(player.step)}""")
+                            cur.execute(f"""UPDATE Person SET max_hp = {int(player.max_hp)}""")
+                            cur.execute(f"""UPDATE Person SET damage = {int(player.damage)}""")
+                            con.commit()
+                            player.num_images = 0
+                            return 0
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_down = event.button
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 3:
@@ -73,15 +77,20 @@ class Level:
                             enemy[0].num_images += 1
                 if event.type == portal_group.sprites()[0].event:
                     portal_group.sprites()[0].update()
-                if event.type == self.button_event and (portal_group.sprites()[0].button.draw_fl and not portal_group.sprites()[0].button.done or (player.rect.x > 1630 and player.num_enem == 1)):
+                if event.type == self.button_event and \
+                        (portal_group.sprites()[0].button.draw_fl and
+                         not portal_group.sprites()[0].button.done or
+                         (player.rect.x > 1630 and player.num_enem == 0)):
                     button_group.update()
 
             player.update(self.motion_keydown, mouse_down, screen)
             enemys_group.update(player)
             screen.fill('black')
             all_sprites.draw(screen)
-            if (v_let_sprites.sprites()[0].rect.x < -48 or player.route == 'right' and player.rect.x >= 828) and \
-                    (v_let_sprites.sprites()[1].rect.x > 1920 + 48 or player.route == 'left' and player.rect.x <= 828):
+            if (v_let_sprites.sprites()[0].rect.x < -48 or player.route == 'right' and
+                player.rect.x >= 828) and \
+                    (v_let_sprites.sprites()[1].rect.x > 1920 + 48 or player.route == 'left' and
+                     player.rect.x <= 828):
                 self.cmr.update(player)
                 self.cmr.apply(player)
                 self.cmr.apply(self.map)
@@ -94,7 +103,8 @@ class Level:
                     self.cmr.apply(i)
                 for i in enemys_group.sprites():
                     self.cmr.apply(i)
-            if portal_group.sprites()[0].button.draw_fl or (player.rect.x > 1630 and player.num_enem == 1):
+            if portal_group.sprites()[0].button.draw_fl or (player.rect.x > 1630 and
+                                                            player.num_enem == 0):
                 button_group.draw(screen)
             portal_group.draw(screen)
             player_group.draw(screen)
