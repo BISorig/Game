@@ -11,7 +11,10 @@ pygame.display.set_caption("HARD MAZE")
 
 
 def Maze(screen, level, main_player):
-    STEP = 25
+    if level == 'eazy' or level == 'hard':
+        STEP = 25
+    if level == 'medium':
+        STEP = 50
 
     def visibility():
         value_visibility = 25
@@ -207,40 +210,40 @@ def Maze(screen, level, main_player):
                 pygame.image.load(f"data\\Hero Knight\\Sprites\\"
                                   f"HeroKnight\\Idle\\Idle{i}.png"),
                 size_person) for i in range(8)],
-                                     'Run': [pygame.transform.scale(pygame.image.load(
-                                         f"data\\Hero Knight\\Sprites\\"
-                                         f"HeroKnight\\Run\\Run{i}.png"),
-                                                                    size_person)
-                                             for i in range(10)],
-                                     'Death': [pygame.transform.scale(pygame.image.load(
-                                         f"data\\Hero Knight\\Sprites\\"
-                                         f"HeroKnight\\Death\\Death{i}.png"),
-                                         size_person)
-                                         for i in range(10)]
-                                     },
+                'Run': [pygame.transform.scale(pygame.image.load(
+                    f"data\\Hero Knight\\Sprites\\"
+                    f"HeroKnight\\Run\\Run{i}.png"),
+                    size_person)
+                    for i in range(10)],
+                'Death': [pygame.transform.scale(pygame.image.load(
+                    f"data\\Hero Knight\\Sprites\\"
+                    f"HeroKnight\\Death\\Death{i}.png"),
+                    size_person)
+                    for i in range(10)]
+            },
 
-                           "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(
-                               pygame.image.load(
-                                   f"data\\Hero Knight\\Sprites\\"
-                                   f"HeroKnight\\Idle\\Idle{i}.png"),
-                               size_person), True, False)
-                               for i in range(8)],
-                               'Run': [pygame.transform.flip(pygame.transform.scale(
-                                   pygame.image.load(
-                                       f"data\\Hero Knight\\Sprites\\"
-                                       f"HeroKnight\\Run\\Run{i}.png"),
-                                   size_person), True, False)
-                                   for i in range(10)],
-                               'Death': [
-                                   pygame.transform.flip(pygame.transform.scale(pygame.image.load(
-                                       f"data\\Hero Knight\\Sprites\\"
-                                       f"HeroKnight\\Death\\Death{i}.png"),
-                                       size_person),
-                                       True, False)
-                                   for i in range(10)]
+                "left": {'Idle': [pygame.transform.flip(pygame.transform.scale(
+                    pygame.image.load(
+                        f"data\\Hero Knight\\Sprites\\"
+                        f"HeroKnight\\Idle\\Idle{i}.png"),
+                    size_person), True, False)
+                    for i in range(8)],
+                    'Run': [pygame.transform.flip(pygame.transform.scale(
+                        pygame.image.load(
+                            f"data\\Hero Knight\\Sprites\\"
+                            f"HeroKnight\\Run\\Run{i}.png"),
+                        size_person), True, False)
+                        for i in range(10)],
+                    'Death': [
+                        pygame.transform.flip(pygame.transform.scale(pygame.image.load(
+                            f"data\\Hero Knight\\Sprites\\"
+                            f"HeroKnight\\Death\\Death{i}.png"),
+                            size_person),
+                            True, False)
+                        for i in range(10)]
 
-                           }
-                           }
+                }
+            }
             self.image = self.images['right']['Idle'][0]
             self.rect = self.image.get_rect()
             self.rect = self.rect.move(tile_width * pos_x + 50, tile_height * pos_y + 50)
