@@ -108,6 +108,9 @@ def Menu(screen, con, cur):
     bg = pygame.image.load('textures/fonmenuosn.png')
     bg = pygame.transform.scale(bg, (1920, 1080))
     screen.blit(bg, (0, 0))
+    bg = pygame.image.load('data/GameMap/buildings/House11.png')
+    bg = pygame.transform.scale(bg, (bg.get_width() * 0.3, bg.get_height() * 0.3))
+    screen.blit(bg, (1400, 530))
     bg = pygame.image.load('textures/namegame.png')
     screen.blit(bg, (-30, 0))
     bg = pygame.image.load('data/GameMap/goose/Goose.png')
@@ -133,7 +136,7 @@ def Menu(screen, con, cur):
                 terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos_m = pygame.mouse.get_pos()
-                if 605 < pos_m[0] < 720 and 670 < pos_m[1] < 705:
+                if 540 < pos_m[0] < 860 and 670 < pos_m[1] < 705:
                     cur.execute("""UPDATE Person SET level = 1""")
                     con.commit()
                     cur.execute(f"""UPDATE Person SET step = {5}""")
@@ -143,16 +146,16 @@ def Menu(screen, con, cur):
                     cur.execute(f"""UPDATE Person SET damage = {5}""")
                     con.commit()
                     return True
-                if 900 < pos_m[0] < 1000 and 920 < pos_m[1] < 955:
+                if 900 < pos_m[0] < 1010 and 920 < pos_m[1] < 955:
                     if yesorno('Вы действительно хотите выйти из игры?', 'exit'):
                         terminate()
                     else:
                         screen.fill((0, 0, 0))
                         check_fill = True
-                if 1055 < pos_m[0] < 1305 and 670 < pos_m[1] < 705:
+                if 1055 < pos_m[0] < 1320 and 670 < pos_m[1] < 705:
                     if level:
                         return True # продолжить сохранённую игру и проверить есть ли она
-                if 605 < pos_m[0] < 775 and 820 < pos_m[1] < 855:
+                if 605 < pos_m[0] < 790 and 820 < pos_m[1] < 855:
                     if checkmusicsound('Звуки действий персонажа', 'sound'):
                         if sound_on_off:
                             sound_on_off = False
@@ -160,7 +163,7 @@ def Menu(screen, con, cur):
                             sound_on_off = True
                         screen.fill((0, 0, 0))
                         check_fill = True
-                if 1050 < pos_m[0] < 1220 and 820 < pos_m[1] < 855:
+                if 1050 < pos_m[0] < 1265 and 820 < pos_m[1] < 855:
                     if checkmusicsound('Музыка', 'music'):
                         if music_on_off:
                             music_on_off = False
@@ -174,6 +177,9 @@ def Menu(screen, con, cur):
             bg = pygame.image.load('textures/fonmenuosn.png')
             bg = pygame.transform.scale(bg, (1920, 1080))
             screen.blit(bg, (0, 0))
+            bg = pygame.image.load('data/GameMap/buildings/House11.png')
+            bg = pygame.transform.scale(bg, (bg.get_width() * 0.3, bg.get_height() * 0.3))
+            screen.blit(bg, (1400, 530))
             bg = pygame.image.load('textures/namegame.png')
             screen.blit(bg, (-30, 0))
             bg = pygame.image.load('data/GameMap/goose/Goose.png')
@@ -193,36 +199,36 @@ def Menu(screen, con, cur):
                 x1 += 200
             autors()
             check_fill = False
-        if 605 < pos_m[0] < 720 and 670 < pos_m[1] < 705:
-            createtext('play', 'blue', 600, 650)  # создаём кнопку для начала игры
+        if 540 < pos_m[0] < 860 and 670 < pos_m[1] < 705:
+            createtext('New game', 'blue', 540, 650)  # создаём кнопку для начала игры
         else:
-            createtext('play', 'red', 600, 650)
-        if 1055 < pos_m[0] < 1305 and 670 < pos_m[1] < 705:
+            createtext('New game', 'red', 540, 650)
+        if 1055 < pos_m[0] < 1320 and 670 < pos_m[1] < 705:
 
             if not level:
             # нужно проверить, есть ли сохранение (если его нет)
-                createtext('continue', 'light blue', 1050, 650)  # создаём кнопку для
+                createtext('Continue', 'light blue', 1050, 650)  # создаём кнопку для
             # продолжения игры
             else:
-                createtext('continue', 'blue', 1050, 650)
+                createtext('Continue', 'blue', 1050, 650)
         else:
             if not level:
             # нужно проверить, есть ли сохранение (если его нет)
-                createtext('continue', 'dark red', 1050, 650)
+                createtext('Continue', 'dark red', 1050, 650)
             # нужно проверить, есть ли сохранение (если оно есть)
             else:
-                createtext('continue', 'red', 1050, 650)
-        if 605 < pos_m[0] < 775 and 820 < pos_m[1] < 855:
-            createtext('sound', 'blue', 600, 800)  # создаём кнопку звуков атаки и т.п.
+                createtext('Continue', 'red', 1050, 650)
+        if 605 < pos_m[0] < 790 and 820 < pos_m[1] < 855:
+            createtext('Sound', 'blue', 600, 800)  # создаём кнопку звуков атаки и т.п.
             # вкл выкл
         else:
-            createtext('sound', 'red', 600, 800)
-        if 1050 < pos_m[0] < 1220 and 820 < pos_m[1] < 855:
-            createtext('music', 'blue', 1050, 800)  # создаём кнопку музыки вкл, выкл
+            createtext('Sound', 'red', 600, 800)
+        if 1095 < pos_m[0] < 1265 and 820 < pos_m[1] < 855:
+            createtext('Music', 'blue', 1095, 800)  # создаём кнопку музыки вкл, выкл
         else:
-            createtext('music', 'red', 1050, 800)
-        if 900 < pos_m[0] < 1000 and 920 < pos_m[1] < 955:
-            createtext('exit', 'blue', 900, 900)  # создаём кнопку выхода
+            createtext('Music', 'red', 1095, 800)
+        if 900 < pos_m[0] < 1010 and 920 < pos_m[1] < 955:
+            createtext('Exit', 'blue', 900, 900)  # создаём кнопку выхода
         else:
-            createtext('exit', 'red', 900, 900)
+            createtext('Exit', 'red', 900, 900)
         pygame.display.flip()

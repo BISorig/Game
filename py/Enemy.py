@@ -220,7 +220,7 @@ class Enemy(pygame.sprite.Sprite):
             self.pr_mode = 'Hit'
             self.mode = 'Idle'
             self.num_images = 0
-        if self.mode == 'Hit' and self.num_images == 0:
+        if self.mode == 'Hit' and player.num_images == 0:
             self.hp -= player.damage
             if player.route == 'right':
                 self.rect.x += 3

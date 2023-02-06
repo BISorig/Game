@@ -84,6 +84,9 @@ class Level:
                     button_group.update()
 
             player.update(self.motion_keydown, mouse_down, screen)
+            if player.mode == 'Death' and player.num_images == 9:
+                self.run = 0
+
             enemys_group.update(player)
             screen.fill('black')
             all_sprites.draw(screen)
@@ -109,7 +112,6 @@ class Level:
             portal_group.draw(screen)
             player_group.draw(screen)
             screen.blit(player.text, (100, 100))
-
             enemys_group.draw(screen)
             pygame.display.flip()
 
