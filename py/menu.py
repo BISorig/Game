@@ -136,7 +136,7 @@ def Menu(screen, con, cur):
                 terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos_m = pygame.mouse.get_pos()
-                if 605 < pos_m[0] < 720 and 670 < pos_m[1] < 705:
+                if 605 < pos_m[0] < 910 and 670 < pos_m[1] < 705:
                     cur.execute("""UPDATE Person SET level = 1""")
                     con.commit()
                     cur.execute(f"""UPDATE Person SET step = {5}""")
